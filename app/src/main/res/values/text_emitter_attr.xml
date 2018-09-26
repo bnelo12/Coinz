@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TextEmitter">
+        <attr name="displayText" format="string"></attr>
+        <attr name="displayRate" format="integer"></attr>
+    </declare-styleable>
+</resources>

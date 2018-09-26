@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#000000"
+    tools:context=".MainActivity">
+
+    <elosoft.coinz.Components.TextEmitter
+        android:id="@+id/main_text_emitter"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000"
+        app:displayText="Welcome traveler. You are about to embark on a journey to collect the treasures of EDALOT" />
+
+</android.support.constraint.ConstraintLayout>
