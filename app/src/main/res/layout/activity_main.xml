@@ -8,10 +8,51 @@
     tools:context=".MainActivity">
 
     <elosoft.coinz.Components.TextEmitter
-        android:id="@+id/main_text_emitter"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#000"
-        app:displayText="Welcome traveler. You are about to embark on a journey to collect the treasures of EDALOT" />
+        android:id="@+id/tap_to_begin_emitter"
+        android:layout_width="210dp"
+        android:layout_height="30dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:displayText="Tap to Begin . . ."
+        app:displayRate="50"
+        />
+
+    <TextView
+        android:id="@+id/game_title"
+        android:layout_width="wrap_content"
+        android:layout_height="55dp"
+        android:layout_marginTop="30dp"
+        android:fontFamily="@font/eight_bit_headline"
+        android:text="Coinz"
+        android:textColor="@color/orange"
+        android:textSize="40dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+         />
+
+    <TextView
+        android:id="@+id/copyright_notice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/eight_bit_body"
+        android:text="Copyright Elosoft 2018"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="30dp" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_settings_wheel"
+        android:background="#0000"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="30dp" />
 
 </android.support.constraint.ConstraintLayout>

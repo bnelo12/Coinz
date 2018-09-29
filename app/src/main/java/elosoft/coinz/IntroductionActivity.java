@@ -5,13 +5,13 @@ import android.os.Bundle;
 
 import elosoft.coinz.Components.TextEmitter;
 
-public class MainActivity extends Activity {
+public class IntroductionActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        TextEmitter te = this.findViewById(R.id.tap_to_begin_emitter);
-        te.emitText();
+//        setContentView(R.layout.activity_main);
+//        TextEmitter te = this.findViewById(R.id.main_text_emitter);
+//        te.emitText();
     }
 }
