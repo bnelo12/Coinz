@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Coinz</string>
+    <string name="intro_text">Welcome Adventurer. You are about to embark on a journey to collect the treasures of EDALOT! First we need to fill out your travel papers and then you can be on your way. %n %n Tap to Continue . . . %p %n What will be thy username on thy quest? %n %n username: %i</string>
 </resources>

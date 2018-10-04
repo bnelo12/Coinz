@@ -25,8 +25,13 @@ public class TextEmitter extends View {
     private boolean viewInitialized = false;
     private String displayText;
     private ArrayList<String> textBlocks;
+    public ArrayList<String> userInput;
     private Bitmap pointerBM;
     private Paint textPaint = new Paint();
+    private EightBitKeyBoard eightBitKeyBoard;
+    public boolean showCursor = true;
+    public boolean paused = false;
+    public boolean userInputMode = false;
 
     private Handler mainLoopHandler = new Handler(Looper.getMainLooper());
     private Runnable updateCursorPosition = new Runnable() {
@@ -37,14 +42,31 @@ public class TextEmitter extends View {
             }
             invalidate();
             cursorPosition += 1;
-            if (cursorPosition == textBlocks.get(currentLine).length()) {
-                if (textBlocks.size() - 1 == currentLine) return;
+            if (cursorPosition >= textBlocks.get(currentLine).length()) {
+                if (textBlocks.size() - 1 == currentLine) {
+                    if (onComplete != null) {
+                        onComplete.run();
+                    }
+                    return;
+                }
+                if (textBlocks.get(currentLine + 1).equals("%p")) {
+                    pause();
+                    textBlocks.remove(currentLine + 1);
+                    return;
+                }
+                if (textBlocks.get(currentLine + 1).equals("%i")) {
+                    getUserInput();
+                    textBlocks.remove(currentLine + 1);
+                    return;
+                }
                 cursorPosition = 0;
                 currentLine += 1;
             }
             mainLoopHandler.postDelayed(this, textRate);
         }
     };
+
+    public Runnable onComplete = null;
 
     public TextEmitter(Context context, AttributeSet attrs){
         super(context, attrs);
@@ -74,7 +96,15 @@ public class TextEmitter extends View {
                 viewInitialized = true;
                 textBlocks = preProcessText(displayText, viewWidth);
             }
-        });
+         });
+
+         this.setOnClickListener(new OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 continueEmit();
+             }
+         });
+
     }
 
     private ArrayList<String> preProcessText(String text, int viewWidth) {
@@ -84,6 +114,26 @@ public class TextEmitter extends View {
         int runningLineLengthCount = 0;
         int currentLine = 0;
         for (int i = 0; i < splitString.length; i++) {
+            if (splitString[i].equals("%n")) {
+                runningLineLengthCount = 0;
+                currentLine += 1;
+                textBlocks.add("");
+                continue;
+            }
+            if (splitString[i].equals("%p")) {
+                runningLineLengthCount = 0;
+                currentLine += 2;
+                textBlocks.add("%p");
+                textBlocks.add("");
+                continue;
+            }
+            if (splitString[i].equals("%i")) {
+                runningLineLengthCount = 0;
+                currentLine += 2;
+                textBlocks.add("%i");
+                textBlocks.add("");
+                continue;
+            }
             int wordLength = (int) textPaint.measureText(splitString[i] + " ");
             if (runningLineLengthCount + wordLength > viewWidth - 96) {
                 runningLineLengthCount = 0;
@@ -100,12 +150,46 @@ public class TextEmitter extends View {
         updateCursorPosition.run();
     }
 
+    public void continueEmit() {
+        if (paused) {
+            paused = false;
+            updateCursorPosition.run();
+        }
+    }
+
+    public void getUserInput() {
+        userInputMode = true;
+    }
+
+    public void pause() {
+        paused = true;
+    }
+
+    public void addString(String input) {
+        textBlocks.set(currentLine, textBlocks.get(currentLine).concat(input));
+        Log.d("Hello", input);
+        invalidate();
+    }
+
+    public void addEightBitKeyBoard(EightBitKeyBoard keyboard) {
+        this.eightBitKeyBoard = keyboard;
+        keyboard.addTextEmitter(this);
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         for (int line = 0; line < currentLine; line++) {
             canvas.drawText(textBlocks.get(line), 100, 60+60*line, textPaint);
         }
-        canvas.drawText(textBlocks.get(currentLine).substring(0, cursorPosition), 100, 60+60*currentLine, textPaint);
-        canvas.drawBitmap(pointerBM,32,20+60*currentLine, textPaint);
+        if (textBlocks.get(currentLine).length() > 0) {
+            if (userInputMode) {
+                canvas.drawText(textBlocks.get(currentLine),100, 60 + 60 * currentLine, textPaint);
+            } else {
+                canvas.drawText(textBlocks.get(currentLine).substring(0, cursorPosition), 100, 60 + 60 * currentLine, textPaint);
+            }
+        }
+        if (showCursor) {
+            canvas.drawBitmap(pointerBM, 32, 20 + 60 * currentLine, textPaint);
+        }
     }
 }

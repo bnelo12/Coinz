@@ -7,5 +7,18 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    <style name="KeyText" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">#00FF00</item>
+    </style>
 
+    <style name="key_text">
+        <item name="android:textSize">15dp</item>
+        <item name="android:padding">15dp</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:fontFamily">@font/eight_bit_body</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@android:color/background_light</item>
+    </style>
 </resources>
