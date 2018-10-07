@@ -1,4 +1,4 @@
-package elosoft.coinz;
+package elosoft.coinz.Activities;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
@@ -11,6 +11,7 @@ import android.view.Window;
 
 
 import elosoft.coinz.Components.TextEmitter;
+import elosoft.coinz.R;
 
 public class MainActivity extends Activity {
 
@@ -25,7 +26,7 @@ public class MainActivity extends Activity {
         TextEmitter te = this.findViewById(R.id.tap_to_begin_emitter);
         te.emitText();
 
-        final Intent transitonIntent = new Intent(this, IntroductionActivity.class);
+        final Intent transitonIntent = new Intent(this, CoinzNavigationActivity.class);
         final ActivityOptions activityOptions = ActivityOptions.makeSceneTransitionAnimation(this);
         final View tapToContinueBoundingBox = findViewById(R.id.tap_to_view_bounding_box);
 

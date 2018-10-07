@@ -13,12 +13,23 @@
 
     <style name="key_text">
         <item name="android:textSize">15dp</item>
-        <item name="android:padding">15dp</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
+        <item name="android:height">40dp</item>
         <item name="android:fontFamily">@font/eight_bit_body</item>
         <item name="android:textAlignment">center</item>
+        <item name="android:gravity">center</item>
         <item name="android:textColor">@android:color/background_light</item>
+    </style>
+
+    <style name="nav_bar_icon">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:height">20dp</item>
+        <item name="android:background">#0000</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_height">15dp</item>
+        <item name="android:scaleType">fitCenter</item>
     </style>
 </resources>

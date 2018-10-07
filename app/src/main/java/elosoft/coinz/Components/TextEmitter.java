@@ -25,7 +25,8 @@ public class TextEmitter extends View {
     private boolean viewInitialized = false;
     private String displayText;
     private ArrayList<String> textBlocks;
-    public ArrayList<String> userInput;
+    public ArrayList<String> userInputList = new ArrayList<>();
+    private String currentUserInput = "";
     private Bitmap pointerBM;
     private Paint textPaint = new Paint();
     private EightBitKeyBoard eightBitKeyBoard;
@@ -101,7 +102,9 @@ public class TextEmitter extends View {
          this.setOnClickListener(new OnClickListener() {
              @Override
              public void onClick(View v) {
-                 continueEmit();
+                 if (paused && !userInputMode) {
+                     continueEmit();
+                 }
              }
          });
 
@@ -159,6 +162,7 @@ public class TextEmitter extends View {
 
     public void getUserInput() {
         userInputMode = true;
+        paused = true;
     }
 
     public void pause() {
@@ -166,14 +170,31 @@ public class TextEmitter extends View {
     }
 
     public void addString(String input) {
-        textBlocks.set(currentLine, textBlocks.get(currentLine).concat(input));
-        Log.d("Hello", input);
-        invalidate();
+        if (userInputMode) {
+            currentUserInput = currentUserInput.concat(input);
+            invalidate();
+        }
+    }
+
+    public void backSpace() {
+        if (currentUserInput.length() > 0) {
+            currentUserInput = currentUserInput.substring(0, currentUserInput.length() - 1);
+            invalidate();
+        }
     }
 
     public void addEightBitKeyBoard(EightBitKeyBoard keyboard) {
         this.eightBitKeyBoard = keyboard;
         keyboard.addTextEmitter(this);
+    }
+
+    public void addUserInputAndContinue() {
+        userInputMode = false;
+        textBlocks.set(currentLine, textBlocks.get(currentLine).concat(this.currentUserInput));
+        userInputList.add(currentUserInput);
+        currentUserInput = "";
+        currentLine++;
+        continueEmit();
     }
 
     @Override
@@ -183,7 +204,7 @@ public class TextEmitter extends View {
         }
         if (textBlocks.get(currentLine).length() > 0) {
             if (userInputMode) {
-                canvas.drawText(textBlocks.get(currentLine),100, 60 + 60 * currentLine, textPaint);
+                canvas.drawText(textBlocks.get(currentLine).concat(this.currentUserInput),100, 60 + 60 * currentLine, textPaint);
             } else {
                 canvas.drawText(textBlocks.get(currentLine).substring(0, cursorPosition), 100, 60 + 60 * currentLine, textPaint);
             }
@@ -192,4 +213,5 @@ public class TextEmitter extends View {
             canvas.drawBitmap(pointerBM, 32, 20 + 60 * currentLine, textPaint);
         }
     }
+
 }

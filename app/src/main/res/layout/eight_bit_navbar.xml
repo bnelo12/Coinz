@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+    <ImageButton
+        android:id="@+id/nav_bar_home_button"
+        style="@style/nav_bar_icon"
+        android:src="@drawable/icon_fortress" />
+    <ImageButton
+        android:id="@+id/nav_bar_inventory_button"
+        android:src="@drawable/icon_gold_coin"
+        style="@style/nav_bar_icon"/>
+    <ImageButton
+        android:id="@+id/nav_bar_icon_bank"
+        android:src="@drawable/icon_bank"
+        style="@style/nav_bar_icon"/>
+    <ImageButton
+        android:id="@+id/nav_bar_icon_map"
+        android:src="@drawable/icon_map"
+        style="@style/nav_bar_icon"/>
+    <ImageButton
+        android:id="@+id/nav_bar_icon_settings"
+        android:src="@drawable/icon_settings_wheel"
+        style="@style/nav_bar_icon"/>
+</LinearLayout>
