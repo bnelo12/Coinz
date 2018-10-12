@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         app:displayText="@string/intro_text"
         app:displayRate="50" />
-    <elosoft.coinz.Components.EightBitKeyBoard
+    <elosoft.coinz.Components.EightBitRetroKeyBoard
         android:id="@+id/keyboard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

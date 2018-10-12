@@ -13,7 +13,6 @@ import static org.junit.Assert.*;
 public class TextEmitterTest {
     @Test
     public void TestStringPreProcess() {
-        TextEmitter
         assertEquals(4, 2 + 2);
     }
 }

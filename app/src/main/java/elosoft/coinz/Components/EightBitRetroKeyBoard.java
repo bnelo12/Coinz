@@ -10,10 +10,10 @@ import android.widget.TextView;
 
 import elosoft.coinz.R;
 
-public class EightBitKeyBoard extends RelativeLayout {
+public class EightBitRetroKeyBoard extends RelativeLayout {
     private TextEmitter textEmitter;
 
-    public EightBitKeyBoard(Context context, AttributeSet attrs) {
+    public EightBitRetroKeyBoard(Context context, AttributeSet attrs) {
         super(context, attrs);
         inflate(context, R.layout.keyboard, this);
         init();

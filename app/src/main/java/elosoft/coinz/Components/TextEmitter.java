@@ -11,7 +11,6 @@ import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ public class TextEmitter extends View {
     private String currentUserInput = "";
     private Bitmap pointerBM;
     private Paint textPaint = new Paint();
-    private EightBitKeyBoard eightBitKeyBoard;
+    private EightBitRetroKeyBoard eightBitRetroKeyBoard;
     public boolean showCursor = true;
     public boolean paused = false;
     public boolean userInputMode = false;
@@ -183,8 +182,8 @@ public class TextEmitter extends View {
         }
     }
 
-    public void addEightBitKeyBoard(EightBitKeyBoard keyboard) {
-        this.eightBitKeyBoard = keyboard;
+    public void addEightBitKeyBoard(EightBitRetroKeyBoard keyboard) {
+        this.eightBitRetroKeyBoard = keyboard;
         keyboard.addTextEmitter(this);
     }
 

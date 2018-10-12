@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="27dp"
+        android:layout_height="30dp"
+        android:fontFamily="@font/eight_bit_body"
+        android:text="->"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="217dp"
+        tools:layout_editor_absoluteY="175dp" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="166dp"
+        android:layout_height="30dp"
+        android:fontFamily="@font/eight_bit_body"
+        android:text="12.1234 GOLD"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="244dp"
+        tools:layout_editor_absoluteY="175dp" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="117dp"
+        android:layout_height="30dp"
+        android:fontFamily="@font/eight_bit_body"
+        android:text="16 PNNY"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="101dp"
+        tools:layout_editor_absoluteY="175dp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="384dp"
+        android:layout_height="42dp"
+        android:fontFamily="@font/eight_bit_headline"
+        android:text="The Fortress"
+        android:textColor="@color/orange"
+        android:textSize="25sp"
+        tools:layout_editor_absoluteX="26dp"
+        tools:layout_editor_absoluteY="108dp" />
+</android.support.constraint.ConstraintLayout>
