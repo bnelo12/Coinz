@@ -26,10 +26,34 @@
     <style name="nav_bar_icon">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:height">20dp</item>
+        <item name="android:height">40dp</item>
         <item name="android:background">#0000</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_height">15dp</item>
         <item name="android:scaleType">fitCenter</item>
+    </style>
+
+    <style name="title_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/eight_bit_headline</item>
+        <item name="android:textColor">@color/lime</item>
+        <item name="android:textSize">25dp</item>
+        <item name="android:layout_marginTop">70dp</item>
+        <item name="android:layout_marginLeft">20dp</item>
+    </style>
+
+    <style name="welcome_message">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+    </style>
+
+    <style name="text_body">
+        <item name="android:fontFamily">@font/eight_bit_body</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">#FFF</item>
     </style>
 </resources>

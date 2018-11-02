@@ -5,11 +5,11 @@ import android.support.constraint.ConstraintLayout;
 import elosoft.coinz.Components.TextEmitter;
 import elosoft.coinz.R;
 
-public class FortressView extends ConstraintLayout {
-    public FortressView(Context context) {
+public class TradingFloorView extends ConstraintLayout {
+    public TradingFloorView(Context context) {
         super(context);
-        inflate(context, R.layout.fortress, this);
-        TextEmitter welcomeMessage = findViewById(R.id.fortress_welcome_message);
+        inflate(context, R.layout.trading_floor, this);
+        TextEmitter welcomeMessage = findViewById(R.id.trading_floor_welcome_message);
         welcomeMessage.emitText();
     }
 }
