@@ -1,22 +1,29 @@
 package elosoft.coinz.Activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintLayout.LayoutParams;
-import android.view.LayoutInflater;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.ImageButton;
 
 import elosoft.coinz.R;
 import elosoft.coinz.Views.BankView;
 import elosoft.coinz.Views.FortressView;
+import elosoft.coinz.Views.MapScreenView;
 import elosoft.coinz.Views.TradingFloorView;
 
-public class CoinzNavigationActivity extends Activity {
+public class CoinzNavigationActivity extends FragmentActivity {
 
-    private View currentView = null;
+    private Fragment currentFragment = null;
+    private FortressView fortessView = new FortressView();
+    private MapScreenView mapScreenView = new MapScreenView();
+    private BankView bankView = new BankView();
+    private TradingFloorView tradingFloorView = new TradingFloorView();
 
     private enum SubViewType {
         FORTRESS, TRADING_FLOOR, BANK, MAP, SETTINGS
@@ -26,30 +33,29 @@ public class CoinzNavigationActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_screen);
-
-        ConstraintLayout parentLayout = findViewById(R.id.current_page);
-        FortressView fv = new FortressView(this);
-        currentView = fv;
-        fv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-        parentLayout.addView(fv);
-
+        loadView(SubViewType.FORTRESS);
         init();
     }
 
     private void loadView(SubViewType subView) {
-        ConstraintLayout parentLayout = findViewById(R.id.current_page);
-        parentLayout.removeView(currentView);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
         if (subView == SubViewType.FORTRESS) {
-            currentView = new FortressView(this);
+            currentFragment = fortessView;
         }
         else if (subView == SubViewType.TRADING_FLOOR) {
-            currentView = new TradingFloorView(this);
+            currentFragment = tradingFloorView;
         }
         else if (subView == SubViewType.BANK) {
-            currentView = new BankView(this);
+            currentFragment = bankView;
         }
-        currentView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-        parentLayout.addView(currentView);
+        else if (subView == SubViewType.MAP) {
+            currentFragment = mapScreenView;
+        }
+
+        fragmentTransaction.replace(R.id.current_page, currentFragment);
+        fragmentTransaction.commit();
     }
 
     private void init() {
@@ -72,6 +78,13 @@ public class CoinzNavigationActivity extends Activity {
             @Override
             public void onClick(View v) {
                 loadView(SubViewType.BANK);
+            }
+        });
+        ImageButton mapButton = findViewById(R.id.nav_bar_icon_map);
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadView(SubViewType.MAP);
             }
         });
     }

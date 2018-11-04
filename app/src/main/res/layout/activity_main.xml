@@ -6,15 +6,6 @@
     android:layout_height="fill_parent"
     android:background="#000000"
     tools:context=".Activities.MainActivity">
-    
-    <View
-        android:id="@+id/tap_to_view_bounding_box"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="120dp"
-        />
 
     <elosoft.coinz.Components.TextEmitter
         android:id="@+id/tap_to_begin_emitter"
@@ -41,6 +32,14 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
          />
+    <View
+        android:id="@+id/tap_to_view_bounding_box"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="120dp"
+        />
 
     <TextView
         android:id="@+id/copyright_notice"

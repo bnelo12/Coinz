@@ -17,6 +17,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:displayText="The markets are looking good today. Why not make a trade."
-        app:displayRate="50"
+        app:displayRate="20"
         style="@style/welcome_message" />
 </android.support.constraint.ConstraintLayout>
