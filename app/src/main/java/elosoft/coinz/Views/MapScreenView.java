@@ -11,12 +11,8 @@ import android.view.ViewGroup;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.mapbox.mapboxsdk.annotations.Icon;
 import com.mapbox.mapboxsdk.annotations.IconFactory;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
@@ -25,17 +21,16 @@ import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.location.LocationComponent;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.ArrayList;
 
+import elosoft.coinz.Models.Coin;
 import elosoft.coinz.R;
 
 public class MapScreenView extends Fragment {
 
     private MapView mapView;
+    private ArrayList<Coin> coinz = new ArrayList<Coin>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,7 +42,7 @@ public class MapScreenView extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         mapView = view.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
-        init();
+        initMap();
     }
 
     @Override
@@ -92,70 +87,72 @@ public class MapScreenView extends Fragment {
         mapView.onDestroy();
     }
 
-    private void init() {
-
-        RequestQueue queue = Volley.newRequestQueue(this.getContext());
-        String url ="http://homepages.inf.ed.ac.uk/stg/coinz/2018/01/01/coinzmap.geojson";
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        initMap(response);
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO: Handle error
-
-                    }
-                });
-        queue.add(jsonObjectRequest);
+    private void applyMapSettingsToMap(MapboxMap mapboxMap) {
+        LatLngBounds latLngBounds = new LatLngBounds.Builder()
+                .include(new LatLng(55.946233, -3.192473))
+                .include(new LatLng(55.942617, -3.184319))
+                .build();
+        mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(18));
+        mapboxMap.moveCamera(CameraUpdateFactory.bearingTo(-15));
+        mapboxMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 0));
+        mapboxMap.setLatLngBoundsForCameraTarget(latLngBounds);
+        mapboxMap.getUiSettings().setRotateGesturesEnabled(false);
+        mapboxMap.getUiSettings().setTiltGesturesEnabled(false);
+        mapboxMap.getUiSettings().setZoomGesturesEnabled(false);
+        mapboxMap.getUiSettings().setCompassEnabled(false);
+        mapboxMap.getUiSettings().setAttributionEnabled(false);
+        mapboxMap.getUiSettings().setLogoEnabled(false);
     }
 
-    private void initMap(JSONObject geojson) {
-        mapView.setStyleUrl("mapbox://styles/bnelo12/cjo2xxw9022ju2rqq100qygz8");
-        mapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(MapboxMap mapboxMap) {
-                LatLngBounds latLngBounds = new LatLngBounds.Builder()
-                        .include(new LatLng(55.946233, -3.192473))
-                        .include(new LatLng(55.942617, -3.184319))
-                        .build();
-                mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(18));
-                mapboxMap.moveCamera(CameraUpdateFactory.bearingTo(-20));
-                mapboxMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 0));
-                mapboxMap.setLatLngBoundsForCameraTarget(latLngBounds);
-                mapboxMap.getUiSettings().setRotateGesturesEnabled(false);
-                mapboxMap.getUiSettings().setTiltGesturesEnabled(false);
-                mapboxMap.getUiSettings().setZoomGesturesEnabled(false);
-                mapboxMap.getUiSettings().setCompassEnabled(false);
-                mapboxMap.getUiSettings().setAttributionEnabled(false);
-                mapboxMap.getUiSettings().setLogoEnabled(false);
-                if (MapScreenView.this.getContext().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-                    // ToDo Prompt user to enable location settings
-                } else {
-                    LocationComponent locationComponent = mapboxMap.getLocationComponent();
-                    locationComponent.activateLocationComponent(MapScreenView.this.getContext());
-                    locationComponent.setLocationComponentEnabled(true);
+    private void addCoinToMap(MapboxMap mapboxMap, Coin coin) {
+        int resourceId = R.drawable.icon_gold_coin;
+        switch (coin.type) {
+            case DOLR: resourceId = R.drawable.icon_dolr_coin; break;
+            case PENY: resourceId = R.drawable.icon_peny_coin; break;
+            case SHIL: resourceId = R.drawable.icon_shil_coin; break;
+            case QUID: resourceId = R.drawable.icon_quid_coin; break;
+            case GOLD: resourceId = R.drawable.icon_gold_coin; break;
+        }
+        MarkerOptions markerOptions = new MarkerOptions()
+                .position(coin.position)
+                .icon(IconFactory.getInstance(getContext()).fromResource(resourceId));
+        mapboxMap.addMarker(markerOptions);
+    }
+
+    private void asyncFetchMapIcons(MapboxMap mapboxMap) {
+        // Replace with access to local storage!!
+        RequestQueue queue = Volley.newRequestQueue(this.getContext());
+        String url = "http://homepages.inf.ed.ac.uk/stg/coinz/2018/01/01/coinzmap.geojson";
+
+        JsonObjectRequest getCoinzDataRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                (geojson) -> {
                     try {
-                        JSONArray features = geojson.getJSONArray("features");
-                        for (int i = 0; i < features.length(); i++) {
-                            JSONObject feature = features.getJSONObject(i);
-                            MarkerOptions markOptions = new MarkerOptions()
-                                    .position(new LatLng(
-                                            feature.getJSONObject("geometry").getJSONArray("coordinates").getDouble(1),
-                                            feature.getJSONObject("geometry").getJSONArray("coordinates").getDouble(0)))
-                                    .icon(IconFactory.getInstance(MapScreenView.this.getContext()).fromResource(R.drawable.icon_gold_coin));
-                            mapboxMap.addMarker(markOptions);
+                        coinz = Coin.parseGeoJSON(geojson);
+                        for (Coin coin : coinz) {
+                            addCoinToMap(mapboxMap, coin);
                         }
-                    } catch (JSONException e) {
-                        // Todo No coins found
-                        Log.e("Coinz JSON Error", "Unable to parse JSON");
                     }
-                }
+                    catch (Coin.CoinzGeoJSONParseError e) {
+                        Log.e("Error while parsing GeoJSON", e.getErrorMessage());
+                    }
+                },
+                (error) -> {
+
+                });
+        queue.add(getCoinzDataRequest);
+    }
+
+    private void initMap() {
+        mapView.setStyleUrl(this.getString(R.string.mapbox_style_url));
+        mapView.getMapAsync((MapboxMap mapboxMap) -> {
+            applyMapSettingsToMap(mapboxMap);
+            if (MapScreenView.this.getContext().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+                // ToDo Prompt user to enable location settings
+            } else {
+                LocationComponent locationComponent = mapboxMap.getLocationComponent();
+                locationComponent.activateLocationComponent(MapScreenView.this.getContext());
+                locationComponent.setLocationComponentEnabled(true);
+                asyncFetchMapIcons(mapboxMap);
             }
         });
     }

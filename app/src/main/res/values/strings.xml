@@ -1,5 +1,6 @@
 <resources>
     <string name="mapbox_access_token">pk.eyJ1IjoiYm5lbG8xMiIsImEiOiJjam8wZmowd3cwMGJpM2xtb3kzd2JnanVnIn0.srR9vOcLSHHPqwHKJf2lyg</string>
     <string name="app_name">Coinz</string>
+    <string name="mapbox_style_url">mapbox://styles/bnelo12/cjo2xxw9022ju2rqq100qygz8</string>
     <string name="intro_text">Welcome Adventurer. You are about to embark on a journey to collect the treasures of EDALOT! First we need to fill out your travel papers and then you can be on your way. %n %n Tap to Continue . . . %p %n What will be thy username on thy quest? %n %n username: %i %n  And thy password? %n %n password: %i %n Could you repeat that for the record house? %n %n password: %i %n Excellent. Now before you embark on your journey, let me tell you about the treasures of EDALOT. . . %n %n Tap To continue . . . %p </string>
 </resources>

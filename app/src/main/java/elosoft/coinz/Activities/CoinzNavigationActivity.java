@@ -1,14 +1,10 @@
 package elosoft.coinz.Activities;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintLayout.LayoutParams;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
 import android.widget.ImageButton;
 
 import elosoft.coinz.R;
@@ -20,7 +16,7 @@ import elosoft.coinz.Views.TradingFloorView;
 public class CoinzNavigationActivity extends FragmentActivity {
 
     private Fragment currentFragment = null;
-    private FortressView fortessView = new FortressView();
+    private FortressView fortressView = new FortressView();
     private MapScreenView mapScreenView = new MapScreenView();
     private BankView bankView = new BankView();
     private TradingFloorView tradingFloorView = new TradingFloorView();
@@ -42,7 +38,7 @@ public class CoinzNavigationActivity extends FragmentActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         if (subView == SubViewType.FORTRESS) {
-            currentFragment = fortessView;
+            currentFragment = fortressView;
         }
         else if (subView == SubViewType.TRADING_FLOOR) {
             currentFragment = tradingFloorView;
@@ -60,32 +56,12 @@ public class CoinzNavigationActivity extends FragmentActivity {
 
     private void init() {
         ImageButton tradingFloorButton = findViewById(R.id.nav_bar_trading_floor);
-        tradingFloorButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadView(SubViewType.TRADING_FLOOR);
-            }
-        });
+        tradingFloorButton.setOnClickListener(v -> loadView(SubViewType.TRADING_FLOOR));
         ImageButton fortressButton = findViewById(R.id.nav_bar_fortress);
-        fortressButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadView(SubViewType.FORTRESS);
-            }
-        });
+        fortressButton.setOnClickListener(v -> loadView(SubViewType.FORTRESS));
         ImageButton bankButton = findViewById(R.id.nav_bar_bank);
-        bankButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadView(SubViewType.BANK);
-            }
-        });
+        bankButton.setOnClickListener(v -> loadView(SubViewType.BANK));
         ImageButton mapButton = findViewById(R.id.nav_bar_icon_map);
-        mapButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadView(SubViewType.MAP);
-            }
-        });
+        mapButton.setOnClickListener(v -> loadView(SubViewType.MAP));
     }
 }
