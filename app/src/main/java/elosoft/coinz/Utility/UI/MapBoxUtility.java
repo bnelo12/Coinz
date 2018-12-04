@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.util.Log;
 
 import com.mapbox.mapboxsdk.annotations.IconFactory;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
@@ -38,10 +39,10 @@ public class MapBoxUtility {
     }
 
     public static void addCoinzToMap(MapboxMap mapboxMap,
-                                     ArrayList<HashMap<String, Object>> coinz,
+                                     ArrayList<Coin> coinz,
                                      Context appContext) {
-        for (HashMap<String, Object> coinData : coinz) {
-            addCoinToMap(mapboxMap, deserializeCoinFromFireStore(coinData), appContext);
+        for (Coin coin : coinz) {
+            addCoinToMap(mapboxMap, coin, appContext);
         }
     }
 
@@ -67,9 +68,15 @@ public class MapBoxUtility {
                 != PackageManager.PERMISSION_GRANTED;
     }
 
-    public static  ArrayList<Coin> findClosestCoinz(
-            Location playerLocation, ArrayList<Coin> coinz) {
+    public static  ArrayList<Coin> findCoinzWithinDistance(
+            Location playerLocation, ArrayList<Coin> coinz, double minDistance) {
         ArrayList<Coin> closetCoinz = new ArrayList();
+        for (Coin coin : coinz) {
+            double distanceToCoin = coin.position.distanceTo(new LatLng(playerLocation));
+            if (distanceToCoin < minDistance) {
+                closetCoinz.add(coin);
+            }
+        }
         return closetCoinz;
     }
 }

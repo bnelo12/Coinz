@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import elosoft.coinz.Models.Coin;
@@ -75,6 +76,16 @@ public class DeserializeCoin {
                 (double) coin.get("latitude"), (double)coin.get("longitude"),
                 (double) coin.get("value"));
     }
+
+    public static ArrayList<Coin> deserializeCoinzFromFireStore(
+            ArrayList<HashMap<String, Object>> coinz) {
+        ArrayList<Coin> coinzOut = new ArrayList();
+        for (HashMap<String, Object> coinData : coinz) {
+            coinzOut.add(deserializeCoinFromFireStore(coinData));
+        }
+        return coinzOut;
+    }
+
 
     private static double parseValue(JSONObject properties) throws JSONException {
         return properties.getDouble("value");
