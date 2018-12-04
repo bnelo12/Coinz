@@ -15,10 +15,16 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
+
+import elosoft.coinz.Utility.Serialize.DeserializeCoin;
+import elosoft.coinz.Utility.Network.FireStoreAPI;
 import elosoft.coinz.Components.TextEmitter;
 import elosoft.coinz.Models.Coin;
-import elosoft.coinz.Models.CoinzData;
 import elosoft.coinz.R;
+
+import static elosoft.coinz.Utility.Serialize.DeserializeCoin.deserializeCoinzFromGeoJSON;
+import static elosoft.coinz.Utility.Serialize.SerializeCoin.seralizeCoinzForFirestore;
 
 public class LoadingActivity extends Activity {
     private TextEmitter loadingTextEmitter;
@@ -33,29 +39,26 @@ public class LoadingActivity extends Activity {
         loadCoinzFromFireStore();
     }
 
-    private  void loadCoinzFromFireStore() {
+    private void loadCoinzFromFireStore() {
         loadingTextEmitter.appendText(" %n Getting User Data . . .");
-        // Attempt to load the Coinz from FireStore
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("coinz")
-                .document("bnelo12")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
-
-                            } else {
-                                loadingTextEmitter.appendText(" %n New user detected. Creating Account . . .");
-                                loadCoinzFromServer();
-                            }
-                        } else {
-
-                        }
+        // Attempt to load user data
+        FireStoreAPI.getInstance().getUserCoinz("bnelo12", new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        final Intent transitonIntent = new Intent(LoadingActivity.this, CoinzNavigationActivity.class);
+                        startActivity(transitonIntent);
+                    } else {
+                        loadingTextEmitter.appendText(" %n New user detected. Creating Account . . .");
+                        loadCoinzFromServer();
                     }
-                });
+                } else {
+                    loadingTextEmitter.appendText(" %n Coinz couldn't connect to the server.");
+                }
+            }
+        });
     }
 
     private void loadCoinzFromServer() {
@@ -65,11 +68,10 @@ public class LoadingActivity extends Activity {
         JsonObjectRequest getCoinzDataRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 (geojson) -> {
                     try {
-                        CoinzData.getCoinzData().coinz = Coin.parseGeoJSON(geojson);
+                        HashMap<String, Coin> coinz = deserializeCoinzFromGeoJSON(geojson);
                         FirebaseFirestore db = FirebaseFirestore.getInstance();
-                        CollectionReference coinz = db.collection("coinz");
-                        coinz.document("bnelo12").set(Coin.seralizeCoinSet(
-                                CoinzData.getCoinzData().coinz));
+                        CollectionReference c = db.collection("coinz");
+                        c.document("bnelo12").set(seralizeCoinzForFirestore(coinz));
                         loadingTextEmitter.appendText(" %n Coinz Downloaded");
                         loadingTextEmitter.onComplete = new Runnable() {
                             @Override
@@ -79,7 +81,7 @@ public class LoadingActivity extends Activity {
                             }
                         };
                     }
-                    catch (Coin.CoinzGeoJSONParseError e) {
+                    catch (DeserializeCoin.CoinzGeoJSONParseError e) {
                         Log.e("Error while parsing GeoJSON", e.getErrorMessage());
                     }
                 },
