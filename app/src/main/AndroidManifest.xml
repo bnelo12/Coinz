@@ -19,6 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Activities.LoadingActivity"/>
         <activity android:name=".Activities.IntroductionActivity"/>
         <activity android:name=".Activities.CoinzNavigationActivity">
         </activity>

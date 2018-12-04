@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Coin {
 
@@ -14,13 +15,14 @@ public class Coin {
         PENY, DOLR, SHIL, QUID, GOLD
     }
 
-    public static ArrayList<Coin> parseGeoJSON(JSONObject geojson) throws CoinzGeoJSONParseError {
-        ArrayList<Coin> coinz = new ArrayList();
+    public static HashMap<String, Coin> parseGeoJSON(JSONObject geojson) throws CoinzGeoJSONParseError {
+        HashMap<String, Coin> coinz = new HashMap();
         try {
             JSONArray features = geojson.getJSONArray("features");
             for (int i = 0; i < features.length(); i++) {
                 JSONObject coinGeoJSON = features.getJSONObject(i);
-                coinz.add(new Coin(coinGeoJSON));
+                Coin coin = new Coin(coinGeoJSON);
+                coinz.put(coin.id, coin);
             }
         } catch (JSONException e) {
             throw new CoinzGeoJSONParseError(e.getMessage());
@@ -39,6 +41,26 @@ public class Coin {
         public String getErrorMessage() {
             return errorMessage;
         }
+    }
+
+    public static HashMap<String, Object> seralize(Coin c) {
+        HashMap<String, Object> coinData = new HashMap();
+        coinData.put("id", c.id);
+        coinData.put("value", c.value);
+        coinData.put("type", c.type.name());
+        coinData.put("longitude", c.position.getLongitude());
+        coinData.put("lattitude", c.position.getAltitude());
+        return coinData;
+    }
+
+    public static HashMap<String, Object> seralizeCoinSet(HashMap<String, Coin> coinz) {
+        HashMap<String, Object> coinzData = new HashMap();
+        ArrayList<HashMap<String, Object>> coinList = new ArrayList();
+        for (Coin c : coinz.values()) {
+            coinList.add(seralize(c));
+        }
+        coinzData.put("values", coinList);
+        return coinzData;
     }
 
     public String id;

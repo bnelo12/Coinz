@@ -36,20 +36,13 @@ public class CoinzNavigationActivity extends FragmentActivity {
     private void loadView(SubViewType subView) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        if (subView == SubViewType.FORTRESS) {
-            currentFragment = fortressView;
+        switch (subView) {
+            case FORTRESS: currentFragment = fortressView; break;
+            case MAP: currentFragment = mapScreenView; break;
+            case BANK: currentFragment = bankView; break;
+            case TRADING_FLOOR: currentFragment = tradingFloorView; break;
+            case SETTINGS: currentFragment = bankView; break;
         }
-        else if (subView == SubViewType.TRADING_FLOOR) {
-            currentFragment = tradingFloorView;
-        }
-        else if (subView == SubViewType.BANK) {
-            currentFragment = bankView;
-        }
-        else if (subView == SubViewType.MAP) {
-            currentFragment = mapScreenView;
-        }
-
         fragmentTransaction.replace(R.id.current_page, currentFragment);
         fragmentTransaction.commit();
     }
@@ -63,5 +56,10 @@ public class CoinzNavigationActivity extends FragmentActivity {
         bankButton.setOnClickListener(v -> loadView(SubViewType.BANK));
         ImageButton mapButton = findViewById(R.id.nav_bar_icon_map);
         mapButton.setOnClickListener(v -> loadView(SubViewType.MAP));
+    }
+
+    @Override
+    public void onBackPressed() {
+        /* Do nothing */
     }
 }

@@ -23,14 +23,17 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import elosoft.coinz.Components.TextEmitter;
 import elosoft.coinz.Models.Coin;
+import elosoft.coinz.Models.CoinzData;
 import elosoft.coinz.R;
 
 public class MapScreenView extends Fragment {
 
     private MapView mapView;
-    private ArrayList<Coin> coinz = new ArrayList<Coin>();
+    private TextEmitter mapMessage;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,6 +44,8 @@ public class MapScreenView extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         mapView = view.findViewById(R.id.mapView);
+        mapMessage = view.findViewById(R.id.opening_map_emitter);
+        mapMessage.emitText();
         mapView.onCreate(savedInstanceState);
         initMap();
     }
@@ -120,26 +125,11 @@ public class MapScreenView extends Fragment {
     }
 
     private void asyncFetchMapIcons(MapboxMap mapboxMap) {
-        // Replace with access to local storage!!
-        RequestQueue queue = Volley.newRequestQueue(this.getContext());
-        String url = "http://homepages.inf.ed.ac.uk/stg/coinz/2018/01/01/coinzmap.geojson";
-
-        JsonObjectRequest getCoinzDataRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                (geojson) -> {
-                    try {
-                        coinz = Coin.parseGeoJSON(geojson);
-                        for (Coin coin : coinz) {
-                            addCoinToMap(mapboxMap, coin);
-                        }
-                    }
-                    catch (Coin.CoinzGeoJSONParseError e) {
-                        Log.e("Error while parsing GeoJSON", e.getErrorMessage());
-                    }
-                },
-                (error) -> {
-
-                });
-        queue.add(getCoinzDataRequest);
+        for (Coin coin : CoinzData.getCoinzData().coinz.values()) {
+            addCoinToMap(mapboxMap, coin);
+        }
+        mapMessage.setVisibility(View.INVISIBLE);
+        mapView.setVisibility(View.VISIBLE);
     }
 
     private void initMap() {
@@ -147,7 +137,7 @@ public class MapScreenView extends Fragment {
         mapView.getMapAsync((MapboxMap mapboxMap) -> {
             applyMapSettingsToMap(mapboxMap);
             if (MapScreenView.this.getContext().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-                // ToDo Prompt user to enable location settings
+                mapMessage.appendText(" %n Please enable location tracking in application settings.");
             } else {
                 LocationComponent locationComponent = mapboxMap.getLocationComponent();
                 locationComponent.activateLocationComponent(MapScreenView.this.getContext());

@@ -29,8 +29,10 @@ public class TextEmitter extends View {
     private Bitmap pointerBM;
     private Paint textPaint = new Paint();
     private EightBitRetroKeyBoard eightBitRetroKeyBoard;
+    private int viewWidth = 0;
     public boolean showCursor = true;
     public boolean paused = false;
+    public boolean completed = false;
     public boolean userInputMode = false;
 
     private Handler mainLoopHandler = new Handler(Looper.getMainLooper());
@@ -44,6 +46,8 @@ public class TextEmitter extends View {
             cursorPosition += 1;
             if (cursorPosition >= textBlocks.get(currentLine).length()) {
                 if (textBlocks.size() - 1 == currentLine) {
+                    completed = true;
+                    pause();
                     if (onComplete != null) {
                         onComplete.run();
                     }
@@ -91,25 +95,21 @@ public class TextEmitter extends View {
          this.addOnLayoutChangeListener(new OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                int viewWidth = right - left;
+                viewWidth = right - left;
                 if (viewWidth <= 0) return;
                 viewInitialized = true;
-                textBlocks = preProcessText(displayText, viewWidth);
+                textBlocks = preProcessText(displayText);
             }
          });
 
-         this.setOnClickListener(new OnClickListener() {
-             @Override
-             public void onClick(View v) {
-                 if (paused && !userInputMode) {
-                     continueEmit();
-                 }
+         this.setOnClickListener(v -> {
+             if (paused && !userInputMode) {
+                 continueEmit();
              }
          });
-
     }
 
-    private ArrayList<String> preProcessText(String text, int viewWidth) {
+    private ArrayList<String> preProcessText(String text) {
         ArrayList<String> textBlocks = new ArrayList<String>();
         textBlocks.add("");
         String[] splitString = text.split("\\s+");
@@ -152,8 +152,15 @@ public class TextEmitter extends View {
         updateCursorPosition.run();
     }
 
+    public void appendText(String text) {
+        completed = false;
+        displayText += text;
+        textBlocks = preProcessText(displayText);
+        this.continueEmit();
+    }
+
     public void continueEmit() {
-        if (paused) {
+        if (paused && !completed) {
             paused = false;
             updateCursorPosition.run();
         }
