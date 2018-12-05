@@ -1,5 +1,7 @@
 package elosoft.coinz.Views;
 
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,6 +21,7 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import elosoft.coinz.Activities.CollectCoinzActivity;
 import elosoft.coinz.Components.TextEmitter;
 import elosoft.coinz.Models.Coin;
 import elosoft.coinz.Utility.Network.FireStoreAPI;
@@ -108,6 +111,7 @@ public class MapScreenView extends Fragment implements LocationEngineListener {
         }
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -120,6 +124,16 @@ public class MapScreenView extends Fragment implements LocationEngineListener {
         mapMessage = view.findViewById(R.id.opening_map_emitter);
         mapMessage.emitText();
         mapView.onCreate(savedInstanceState);
+        Button collectCoinzButton = view.findViewById(R.id.collect_coinz_button);
+        collectCoinzButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent transitionIntent = new Intent(getActivity(), CollectCoinzActivity.class);
+                transitionIntent.putExtra("NUMBER_OF_COINZ", closestCoinz.size());
+                ActivityOptions activityOptions = ActivityOptions.makeSceneTransitionAnimation(getActivity());
+                startActivity(transitionIntent, activityOptions.toBundle());
+            }
+        });
         initMap();
     }
 
