@@ -1,0 +1,23 @@
+package elosoft.coinz.Utility.Serialize;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import elosoft.coinz.Models.ExchangeRate;
+
+public class DeserializeExchangeRate {
+    public static ExchangeRate deserializeExchangeRateFromGeoJSON(JSONObject geoJSON)
+            throws DeserializeCoin.CoinzGeoJSONParseError {
+        try {
+            JSONObject rates = geoJSON.getJSONObject("rates");
+            return new ExchangeRate(
+                    rates.getDouble("SHIL"),
+                    rates.getDouble("PENY"),
+                    rates.getDouble("DOLR"),
+                    rates.getDouble("QUID")
+            );
+        } catch (JSONException e) {
+            throw new DeserializeCoin.CoinzGeoJSONParseError(e.getMessage());
+        }
+    }
+}

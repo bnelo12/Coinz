@@ -47,10 +47,6 @@ public class CoinzNavigationActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (!mapScreenView.isHidden()) {
-            Log.d("Fragment Manager", "Hiding the map");
-            fragmentManager.beginTransaction().hide(mapScreenView).commit();
-        }
     }
 
     private void loadView(SubViewType subView) {

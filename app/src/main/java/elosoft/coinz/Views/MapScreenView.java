@@ -37,9 +37,10 @@ public class MapScreenView extends Fragment implements LocationEngineListener {
 
     private MapView mapView;
     private TextEmitter mapMessage;
-    private ArrayList<Coin> coinz;
+    private HashMap<String, Coin> coinz;
     private ArrayList<Coin> closestCoinz;
     private boolean buttonVisble = false;
+    private MapboxMap currentMap = null;
 
     private void initMap() {
         mapView.setStyleUrl(this.getString(R.string.mapbox_style_url));
@@ -59,11 +60,10 @@ public class MapScreenView extends Fragment implements LocationEngineListener {
     }
 
     private void asyncFetchMapIcons(MapboxMap mapboxMap) {
-        FireStoreAPI.getInstance().getUserCoinz("bnelo12", task -> {
-            coinz = deserializeCoinzFromFireStore(
-                    (ArrayList<HashMap<String, Object>>) FireStoreAPI.getTaskResult(task)
-                    .get("values")
-            );
+        FireStoreAPI.getInstance().getUserCollectableCoinz("bnelo12", task -> {
+            HashMap<String, Object> coinzData = (HashMap<String, Object>) FireStoreAPI
+                    .getTaskResult(task);
+            coinz = deserializeCoinzFromFireStore(coinzData);
             addCoinzToMap(mapboxMap, coinz, getContext());
             mapMessage.setVisibility(View.INVISIBLE);
             mapView.setVisibility(View.VISIBLE);
@@ -102,7 +102,7 @@ public class MapScreenView extends Fragment implements LocationEngineListener {
             if (closestCoinz.size() > 0) {
                 handleAbleToCollectCoinz(closestCoinz);
             }
-            else if (buttonVisble == true) {
+            else if (buttonVisble) {
                 Animation slide_down = AnimationUtils.loadAnimation(getContext(),
                         R.anim.slide_down);
                 getView().findViewById(R.id.collect_coinz_button).startAnimation(slide_down);
@@ -128,6 +128,8 @@ public class MapScreenView extends Fragment implements LocationEngineListener {
         collectCoinzButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                FireStoreAPI.getInstance().removeUserCollectableCoinz("bnelo12", closestCoinz, null);
+                FireStoreAPI.getInstance().addUserCollectedCoinz("bnelo12", closestCoinz);
                 Intent transitionIntent = new Intent(getActivity(), CollectCoinzActivity.class);
                 transitionIntent.putExtra("NUMBER_OF_COINZ", closestCoinz.size());
                 ActivityOptions activityOptions = ActivityOptions.makeSceneTransitionAnimation(getActivity());
@@ -147,6 +149,9 @@ public class MapScreenView extends Fragment implements LocationEngineListener {
     public void onResume() {
         super.onResume();
         mapView.onResume();
+        if (currentMap != null) {
+            asyncFetchMapIcons(currentMap);
+        }
     }
 
     @Override

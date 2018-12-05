@@ -3,10 +3,20 @@ package elosoft.coinz.Utility.Network;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
+
+import elosoft.coinz.Models.Coin;
+
+import static elosoft.coinz.Utility.Serialize.SerializeCoin.seralizeCoinzForFirestore;
+import static elosoft.coinz.Utility.Serialize.SerializeCoin.serializeCoinForFirestore;
 
 public class FireStoreAPI {
     private static volatile FireStoreAPI instance;
@@ -49,10 +59,50 @@ public class FireStoreAPI {
         }
     }
 
-    public void getUserCoinz(String user, OnCompleteListener<DocumentSnapshot> onCompleteListener) {
-        db.collection("coinz")
+    public void getUserCollectableCoinz(
+            String user, OnCompleteListener<DocumentSnapshot> onCompleteListener) {
+        db.collection("collectable_coinz")
                 .document(user)
                 .get()
                 .addOnCompleteListener(onCompleteListener);
+    }
+
+    public void setUserCollectableCoinz(String user, HashMap<String, Coin> coinz) {
+        CollectionReference c = db.collection("collectable_coinz");
+        c.document(user).set(seralizeCoinzForFirestore(coinz));
+    }
+
+    public void setUserCollectedCoinz(String user, HashMap<String, Coin> coinz) {
+        CollectionReference c = db.collection("collected_coinz");
+        c.document(user).set(seralizeCoinzForFirestore(coinz));
+    }
+
+    public void getUserCollectedCoinz(
+            String user, OnCompleteListener<DocumentSnapshot> onCompleteListener) {
+        db.collection("collected_coinz")
+                .document(user)
+                .get()
+                .addOnCompleteListener(onCompleteListener);
+    }
+
+    public void addUserCollectedCoinz(
+            String user, ArrayList<Coin> coinz) {
+        DocumentReference docRef = db.collection("collected_coinz").document(user);
+        Map<String,Object> updates = new HashMap<>();
+        for(Coin coin : coinz) {
+            updates.put(coin.id, serializeCoinForFirestore(coin));
+        }
+        docRef.update(updates);
+    }
+
+    public void removeUserCollectableCoinz(
+            String user, ArrayList<Coin> coinz,
+            OnCompleteListener<DocumentSnapshot> onCompleteListener) {
+        DocumentReference docRef = db.collection("collectable_coinz").document(user);
+        Map<String,Object> updates = new HashMap<>();
+        for(Coin coin : coinz) {
+            updates.put(coin.id, FieldValue.delete());
+        }
+        docRef.update(updates);
     }
 }

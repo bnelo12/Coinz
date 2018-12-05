@@ -77,11 +77,12 @@ public class DeserializeCoin {
                 (double) coin.get("value"));
     }
 
-    public static ArrayList<Coin> deserializeCoinzFromFireStore(
-            ArrayList<HashMap<String, Object>> coinz) {
-        ArrayList<Coin> coinzOut = new ArrayList();
-        for (HashMap<String, Object> coinData : coinz) {
-            coinzOut.add(deserializeCoinFromFireStore(coinData));
+    public static HashMap<String, Coin> deserializeCoinzFromFireStore(
+            HashMap<String, Object> coinz) {
+        HashMap<String, Coin> coinzOut = new HashMap<String, Coin>();
+        for (Object coinData : coinz.values()) {
+            Coin coinToAdd = deserializeCoinFromFireStore((HashMap<String, Object>) coinData);
+            coinzOut.put(coinToAdd.id, coinToAdd);
         }
         return coinzOut;
     }

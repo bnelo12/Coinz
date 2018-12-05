@@ -19,11 +19,9 @@ public class SerializeCoin {
 
     public static HashMap<String, Object> seralizeCoinzForFirestore(HashMap<String, Coin> coinz) {
         HashMap<String, Object> coinzData = new HashMap();
-        ArrayList<HashMap<String, Object>> coinList = new ArrayList();
         for (Coin c : coinz.values()) {
-            coinList.add(serializeCoinForFirestore(c));
+            coinzData.put(c.id, serializeCoinForFirestore(c));
         }
-        coinzData.put("values", coinList);
         return coinzData;
     }
 

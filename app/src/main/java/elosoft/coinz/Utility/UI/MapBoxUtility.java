@@ -39,9 +39,10 @@ public class MapBoxUtility {
     }
 
     public static void addCoinzToMap(MapboxMap mapboxMap,
-                                     ArrayList<Coin> coinz,
+                                     HashMap<String, Coin> coinz,
                                      Context appContext) {
-        for (Coin coin : coinz) {
+        mapboxMap.clear();
+        for (Coin coin : coinz.values()) {
             addCoinToMap(mapboxMap, coin, appContext);
         }
     }
@@ -69,9 +70,9 @@ public class MapBoxUtility {
     }
 
     public static  ArrayList<Coin> findCoinzWithinDistance(
-            Location playerLocation, ArrayList<Coin> coinz, double minDistance) {
+            Location playerLocation, HashMap<String, Coin> coinz, double minDistance) {
         ArrayList<Coin> closetCoinz = new ArrayList();
-        for (Coin coin : coinz) {
+        for (Coin coin : coinz.values()) {
             double distanceToCoin = coin.position.distanceTo(new LatLng(playerLocation));
             if (distanceToCoin < minDistance) {
                 closetCoinz.add(coin);
