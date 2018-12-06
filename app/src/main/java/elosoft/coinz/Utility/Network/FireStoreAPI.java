@@ -14,9 +14,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import elosoft.coinz.Models.Coin;
+import elosoft.coinz.Models.UserCoinzData;
 
 import static elosoft.coinz.Utility.Serialize.SerializeCoin.seralizeCoinzForFirestore;
 import static elosoft.coinz.Utility.Serialize.SerializeCoin.serializeCoinForFirestore;
+import static elosoft.coinz.Utility.Serialize.SerializeUserData.serializeUserDataForFireStore;
 
 public class FireStoreAPI {
     private static volatile FireStoreAPI instance;
@@ -65,6 +67,19 @@ public class FireStoreAPI {
                 .document(user)
                 .get()
                 .addOnCompleteListener(onCompleteListener);
+    }
+
+//    public void getUserData(
+//            String userName, OnCompleteListener<DocumentSnapshot> onCompleteListener) {
+//        db.collection("collectable_coinz")
+//                .document(user)
+//                .get()
+//                .addOnCompleteListener(onCompleteListener);
+//    }
+
+    public void setUserData(String userName, UserCoinzData userCoinzData) {
+        CollectionReference c = db.collection("users");
+        c.document(userName).set(serializeUserDataForFireStore(userCoinzData));
     }
 
     public void setUserCollectableCoinz(String user, HashMap<String, Coin> coinz) {

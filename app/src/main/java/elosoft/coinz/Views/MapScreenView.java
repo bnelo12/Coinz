@@ -24,6 +24,7 @@ import java.util.HashMap;
 import elosoft.coinz.Activities.CollectCoinzActivity;
 import elosoft.coinz.Components.TextEmitter;
 import elosoft.coinz.Models.Coin;
+import elosoft.coinz.Utility.LocalStorage.LocalStorageAPI;
 import elosoft.coinz.Utility.Network.FireStoreAPI;
 import elosoft.coinz.R;
 
@@ -130,6 +131,7 @@ public class MapScreenView extends Fragment implements LocationEngineListener {
             public void onClick(View v) {
                 FireStoreAPI.getInstance().removeUserCollectableCoinz("bnelo12", closestCoinz, null);
                 FireStoreAPI.getInstance().addUserCollectedCoinz("bnelo12", closestCoinz);
+                LocalStorageAPI.updateUserCoinzData(getContext().getApplicationContext(), closestCoinz);
                 Intent transitionIntent = new Intent(getActivity(), CollectCoinzActivity.class);
                 transitionIntent.putExtra("NUMBER_OF_COINZ", closestCoinz.size());
                 ActivityOptions activityOptions = ActivityOptions.makeSceneTransitionAnimation(getActivity());

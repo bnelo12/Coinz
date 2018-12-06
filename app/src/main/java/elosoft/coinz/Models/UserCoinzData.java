@@ -51,6 +51,7 @@ public class UserCoinzData {
     public double getNumQUID() {
         return numQUID;
     }
+
     public double getNumPENYInGOLD() {
         return numPENY*exchangeRate.ExchangeRatePENY;
     }

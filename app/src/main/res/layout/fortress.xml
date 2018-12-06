@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
@@ -19,38 +20,90 @@
         app:displayText="Welcome sire. There are still coinz available to collect today."
         app:displayRate="20"
         style="@style/welcome_message" />
+
     <TextView
-        android:id="@+id/fortress_pnny_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="200dp"
-        android:text="16 PNNY   -> 01.3453 GOLD"
-        style="@style/text_body" />
+        android:id="@+id/fortress_peny_text"
+        style="@style/text_body.fortress_coin_name"
+        android:layout_marginTop="100dp"
+        android:text="PENY"
+        app:layout_constraintTop_toTopOf="@id/fortress_title"
+        app:layout_constraintLeft_toLeftOf="parent" />
     <TextView
         android:id="@+id/fortress_dolr_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/fortress_pnny_text"
-        android:text="07 DOLR   ->   11.2121 GOLD"
-        style="@style/text_body" />
+        style="@style/text_body.fortress_coin_name"
+        android:text="DOLR"
+        app:layout_constraintTop_toTopOf="@id/fortress_peny_text"
+        app:layout_constraintLeft_toLeftOf="parent" />
     <TextView
-        android:id="@+id/fortress_deposit_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/fortress_dolr_text"
-        android:layout_marginTop="60dp"
-        android:text="15/25 Coinz Deposited Today"
-        style="@style/text_body" />
+        android:id="@+id/fortress_shil_text"
+        style="@style/text_body.fortress_coin_name"
+        android:text="SHIL"
+        app:layout_constraintTop_toTopOf="@id/fortress_dolr_text"
+        app:layout_constraintLeft_toLeftOf="parent" />
     <TextView
-        android:id="@+id/fortress_coins_found_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/fortress_deposit_text"
-        android:text="25/50 Coinz Found Today"
-        style="@style/text_body" />
+        android:id="@+id/fortress_quid_text"
+        style="@style/text_body.fortress_coin_name"
+        android:text="QUID"
+        app:layout_constraintTop_toTopOf="@id/fortress_shil_text"
+        app:layout_constraintLeft_toLeftOf="parent" />
+    <TextView
+        style="@style/text_body.fortress_arrow"
+        android:text="@string/fortress_arrow"
+        app:layout_constraintTop_toTopOf="@id/fortress_peny_text"
+        app:layout_constraintLeft_toLeftOf="parent" />
+    <TextView
+        style="@style/text_body.fortress_arrow"
+        android:text="@string/fortress_arrow"
+        app:layout_constraintTop_toTopOf="@id/fortress_dolr_text"
+        app:layout_constraintLeft_toLeftOf="parent" />
+    <TextView
+        style="@style/text_body.fortress_arrow"
+        android:text="@string/fortress_arrow"
+        app:layout_constraintTop_toTopOf="@id/fortress_shil_text"
+        app:layout_constraintLeft_toLeftOf="parent" />
+    <TextView
+        style="@style/text_body.fortress_arrow"
+        android:text="@string/fortress_arrow"
+        app:layout_constraintTop_toTopOf="@id/fortress_quid_text"
+        app:layout_constraintLeft_toLeftOf="parent" />
+    <TextView
+        android:id="@+id/fortress_peny_amount_text"
+        style="@style/text_body.fortress_coin_amount"
+        app:layout_constraintTop_toTopOf="@id/fortress_peny_text"
+        app:layout_constraintLeft_toLeftOf="parent" />
+    <TextView
+        android:id="@+id/fortress_dolr_amount_text"
+        style="@style/text_body.fortress_coin_amount"
+        app:layout_constraintTop_toTopOf="@id/fortress_dolr_text"
+        app:layout_constraintLeft_toLeftOf="parent" />
+    <TextView
+        android:id="@+id/fortress_shil_amount_text"
+        style="@style/text_body.fortress_coin_amount"
+        app:layout_constraintTop_toTopOf="@id/fortress_shil_text"
+        app:layout_constraintLeft_toLeftOf="parent" />
+    <TextView
+        android:id="@+id/fortress_quid_amount_text"
+        style="@style/text_body.fortress_coin_amount"
+        app:layout_constraintTop_toTopOf="@id/fortress_quid_text"
+        app:layout_constraintLeft_toLeftOf="parent" />
+    <TextView
+        android:id="@+id/fortress_peny_amount_gold_text"
+        style="@style/text_body.fortress_gold_amount"
+        app:layout_constraintTop_toTopOf="@id/fortress_peny_text"
+        app:layout_constraintRight_toRightOf="parent" />
+    <TextView
+        android:id="@+id/fortress_dolr_amount_gold_text"
+        style="@style/text_body.fortress_gold_amount"
+        app:layout_constraintTop_toTopOf="@id/fortress_dolr_text"
+        app:layout_constraintRight_toRightOf="parent" />
+    <TextView
+        android:id="@+id/fortress_shil_amount_gold_text"
+        style="@style/text_body.fortress_gold_amount"
+        app:layout_constraintTop_toTopOf="@id/fortress_shil_text"
+        app:layout_constraintRight_toRightOf="parent" />
+    <TextView
+        android:id="@+id/fortress_quid_amount_gold_text"
+        style="@style/text_body.fortress_gold_amount"
+        app:layout_constraintTop_toTopOf="@id/fortress_quid_text"
+        app:layout_constraintRight_toRightOf="parent" />
 </android.support.constraint.ConstraintLayout>

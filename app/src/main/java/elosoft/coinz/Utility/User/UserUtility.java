@@ -12,8 +12,8 @@ import elosoft.coinz.Models.UserCoinzData;
 import elosoft.coinz.Utility.LocalStorage.LocalStorageAPI;
 import elosoft.coinz.Utility.Network.FireStoreAPI;
 import elosoft.coinz.Utility.Serialize.DeserializeCoin;
-import elosoft.coinz.Utility.Serialize.DeserializeExchangeRate;
 
+import static elosoft.coinz.Utility.Serialize.DeserializeExchangeRate.deserializeExchangeRateFromGeoJSON;
 import static elosoft.coinz.Utility.Serialize.DeserializeCoin.deserializeCoinzFromGeoJSON;
 
 public class UserUtility {
@@ -22,11 +22,16 @@ public class UserUtility {
         FireStoreAPI fs = FireStoreAPI.getInstance();
         HashMap<String, Coin> collectableCoinz = deserializeCoinzFromGeoJSON(geoJSON);
         HashMap<String, Coin> collectedCoins = new HashMap<>();
-        ExchangeRate coinExchangeRates = DeserializeExchangeRate.deserializeExchangeRateFromGeoJSON(geoJSON);
+        ExchangeRate coinExchangeRates = deserializeExchangeRateFromGeoJSON(geoJSON);
         UserCoinzData userCoinzData = new UserCoinzData(collectedCoins, coinExchangeRates);
         LocalStorageAPI.storeExchangeRate(appContext, coinExchangeRates);
         LocalStorageAPI.storeUserCoinzData(appContext, userCoinzData);
         fs.setUserCollectableCoinz(userName, collectableCoinz);
         fs.setUserCollectedCoinz(userName, collectedCoins);
+        fs.setUserData(userName, userCoinzData);
+    }
+
+    public static void syncLocalUserDataWithFireStore() {
+
     }
 }

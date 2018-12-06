@@ -5,6 +5,10 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import elosoft.coinz.Models.Coin;
 import elosoft.coinz.Models.ExchangeRate;
 import elosoft.coinz.Models.UserCoinzData;
 
@@ -52,6 +56,33 @@ public class LocalStorageAPI {
         double numDOLR = sharedPref.getFloat("USER_NUM_DOLR", 0);
         double numSHIL = sharedPref.getFloat("USER_NUM_SHIL", 0);
         return new UserCoinzData(numPENY,  numSHIL,  numDOLR, numQUID,  exchangeRate);
+    }
+
+    public static void updateUserCoinzData(Context appContext, ArrayList<Coin> coinzToAdd) {
+        SharedPreferences sharedPref = PreferenceManager
+                .getDefaultSharedPreferences(appContext);
+        double numQUID = sharedPref.getFloat("USER_NUM_QUID", 0);
+        double numPENY = sharedPref.getFloat("USER_NUM_PENY", 0);
+        double numDOLR = sharedPref.getFloat("USER_NUM_DOLR", 0);
+        double numSHIL = sharedPref.getFloat("USER_NUM_SHIL", 0);
+
+        for (Coin c : coinzToAdd) {
+            switch (c.type) {
+                case DOLR: numDOLR += c.value; break;
+                case QUID: numQUID += c.value; break;
+                case SHIL: numSHIL += c.value; break;
+                case PENY: numPENY += c.value; break;
+                default: break;
+            }
+        }
+
+        Editor editor = sharedPref.edit();
+        editor.putFloat("USER_NUM_QUID", (float)numQUID);
+        editor.putFloat("USER_NUM_PENY", (float)numPENY);
+        editor.putFloat("USER_NUM_DOLR", (float)numDOLR);
+        editor.putFloat("USER_NUM_SHIL", (float)numSHIL);
+
+        asyncCommit(editor);
     }
 
     private static void asyncCommit(Editor editor) {
