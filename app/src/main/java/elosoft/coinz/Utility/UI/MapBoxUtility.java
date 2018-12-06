@@ -69,13 +69,13 @@ public class MapBoxUtility {
                 != PackageManager.PERMISSION_GRANTED;
     }
 
-    public static  ArrayList<Coin> findCoinzWithinDistance(
+    public static  HashMap<String, Coin> findCoinzWithinDistance(
             Location playerLocation, HashMap<String, Coin> coinz, double minDistance) {
-        ArrayList<Coin> closetCoinz = new ArrayList();
+        HashMap<String, Coin> closetCoinz = new HashMap<>();
         for (Coin coin : coinz.values()) {
             double distanceToCoin = coin.position.distanceTo(new LatLng(playerLocation));
             if (distanceToCoin < minDistance) {
-                closetCoinz.add(coin);
+                closetCoinz.put(coin.id, coin);
             }
         }
         return closetCoinz;

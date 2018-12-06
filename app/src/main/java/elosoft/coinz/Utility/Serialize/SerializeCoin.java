@@ -25,4 +25,8 @@ public class SerializeCoin {
         return coinzData;
     }
 
+    public static HashMap<String, Object> seralizeCoinz(HashMap<String, Coin> coinz) {
+        return seralizeCoinzForFirestore(coinz);
+    }
+
 }

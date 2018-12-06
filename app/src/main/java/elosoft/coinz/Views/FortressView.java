@@ -1,14 +1,17 @@
 package elosoft.coinz.Views;
 
+import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
+import elosoft.coinz.Activities.ViewCollectedCoinzActivity;
 import elosoft.coinz.Components.TextEmitter;
 import elosoft.coinz.Models.ExchangeRate;
 import elosoft.coinz.Models.UserCoinzData;
@@ -46,6 +49,14 @@ public class FortressView extends Fragment {
         shilAmountGold.setText(String.format("%5f GOLD", userCoinzData.getNumSHILInGOLD()));
         quidAmount.setText(String.format("%5f", userCoinzData.getNumQUID()));
         quidAmountGold.setText(String.format("%5f GOLD", userCoinzData.getNumQUIDInGOLD()));
-
+        Button collectCoinzButton = view.findViewById(R.id.view_collected_coinz_button);
+        collectCoinzButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent transitionIntent = new Intent(getActivity(), ViewCollectedCoinzActivity.class);
+                ActivityOptions activityOptions = ActivityOptions.makeSceneTransitionAnimation(getActivity());
+                startActivity(transitionIntent, activityOptions.toBundle());
+            }
+        });
     }
 }

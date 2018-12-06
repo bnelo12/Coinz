@@ -10,6 +10,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -101,7 +102,7 @@ public class FireStoreAPI {
     }
 
     public void addUserCollectedCoinz(
-            String user, ArrayList<Coin> coinz) {
+            String user, Collection<Coin> coinz) {
         DocumentReference docRef = db.collection("collected_coinz").document(user);
         Map<String,Object> updates = new HashMap<>();
         for(Coin coin : coinz) {
@@ -111,7 +112,7 @@ public class FireStoreAPI {
     }
 
     public void removeUserCollectableCoinz(
-            String user, ArrayList<Coin> coinz,
+            String user, Collection<Coin> coinz,
             OnCompleteListener<DocumentSnapshot> onCompleteListener) {
         DocumentReference docRef = db.collection("collectable_coinz").document(user);
         Map<String,Object> updates = new HashMap<>();

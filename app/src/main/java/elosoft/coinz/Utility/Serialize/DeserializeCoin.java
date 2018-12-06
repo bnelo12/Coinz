@@ -77,6 +77,12 @@ public class DeserializeCoin {
                 (double) coin.get("value"));
     }
 
+    public static Coin deserializeCoin(HashMap<String, Object> coin) {
+        return new Coin((String)coin.get("id"), (String)coin.get("type"),
+                (double) coin.get("latitude"), (double)coin.get("longitude"),
+                (double) coin.get("value"));
+    }
+
     public static HashMap<String, Coin> deserializeCoinzFromFireStore(
             HashMap<String, Object> coinz) {
         HashMap<String, Coin> coinzOut = new HashMap<String, Coin>();
@@ -87,6 +93,10 @@ public class DeserializeCoin {
         return coinzOut;
     }
 
+    public static HashMap<String, Coin> deserializeCoinz(
+            HashMap<String, Object> coinz) {
+        return deserializeCoinzFromFireStore(coinz);
+    }
 
     private static double parseValue(JSONObject properties) throws JSONException {
         return properties.getDouble("value");

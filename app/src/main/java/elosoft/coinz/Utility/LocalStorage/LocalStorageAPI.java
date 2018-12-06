@@ -6,6 +6,7 @@ import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 import elosoft.coinz.Models.Coin;
@@ -58,7 +59,7 @@ public class LocalStorageAPI {
         return new UserCoinzData(numPENY,  numSHIL,  numDOLR, numQUID,  exchangeRate);
     }
 
-    public static void updateUserCoinzData(Context appContext, ArrayList<Coin> coinzToAdd) {
+    public static void updateUserCoinzData(Context appContext, Collection<Coin> coinzToAdd) {
         SharedPreferences sharedPref = PreferenceManager
                 .getDefaultSharedPreferences(appContext);
         double numQUID = sharedPref.getFloat("USER_NUM_QUID", 0);

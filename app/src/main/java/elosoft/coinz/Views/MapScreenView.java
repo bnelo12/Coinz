@@ -29,6 +29,7 @@ import elosoft.coinz.Utility.Network.FireStoreAPI;
 import elosoft.coinz.R;
 
 import static elosoft.coinz.Utility.Serialize.DeserializeCoin.deserializeCoinzFromFireStore;
+import static elosoft.coinz.Utility.Serialize.SerializeCoin.seralizeCoinz;
 import static elosoft.coinz.Utility.UI.MapBoxUtility.addCoinzToMap;
 import static elosoft.coinz.Utility.UI.MapBoxUtility.applyGameSettingsToMap;
 import static elosoft.coinz.Utility.UI.MapBoxUtility.checkMapPermissions;
@@ -39,7 +40,7 @@ public class MapScreenView extends Fragment implements LocationEngineListener {
     private MapView mapView;
     private TextEmitter mapMessage;
     private HashMap<String, Coin> coinz;
-    private ArrayList<Coin> closestCoinz;
+    private HashMap<String, Coin> closestCoinz;
     private boolean buttonVisble = false;
     private MapboxMap currentMap = null;
 
@@ -72,7 +73,7 @@ public class MapScreenView extends Fragment implements LocationEngineListener {
         });
     }
 
-    public void handleAbleToCollectCoinz(ArrayList<Coin> collectableCoinz) {
+    public void handleAbleToCollectCoinz(HashMap<String, Coin> collectableCoinz) {
         if (closestCoinz == null) {
             Log.d("MapScreenView", "[handleAbleToCollectCoinz] collectableCoinz was null");
         }
@@ -129,11 +130,12 @@ public class MapScreenView extends Fragment implements LocationEngineListener {
         collectCoinzButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FireStoreAPI.getInstance().removeUserCollectableCoinz("bnelo12", closestCoinz, null);
-                FireStoreAPI.getInstance().addUserCollectedCoinz("bnelo12", closestCoinz);
-                LocalStorageAPI.updateUserCoinzData(getContext().getApplicationContext(), closestCoinz);
+                FireStoreAPI.getInstance().removeUserCollectableCoinz("bnelo12", closestCoinz.values(), null);
+                FireStoreAPI.getInstance().addUserCollectedCoinz("bnelo12", closestCoinz.values());
+                LocalStorageAPI.updateUserCoinzData(getContext().getApplicationContext(), closestCoinz.values());
                 Intent transitionIntent = new Intent(getActivity(), CollectCoinzActivity.class);
                 transitionIntent.putExtra("NUMBER_OF_COINZ", closestCoinz.size());
+                transitionIntent.putExtra("COINZ", seralizeCoinz(closestCoinz));
                 ActivityOptions activityOptions = ActivityOptions.makeSceneTransitionAnimation(getActivity());
                 startActivity(transitionIntent, activityOptions.toBundle());
             }
