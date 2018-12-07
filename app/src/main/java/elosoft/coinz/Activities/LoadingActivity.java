@@ -41,12 +41,15 @@ public class LoadingActivity extends Activity {
     private void loadCoinzFromFireStore() {
         loadingTextEmitter.appendText(" %n Getting User Data . . .");
         // Attempt to load user data
-        FireStoreAPI.getInstance().getUserCollectableCoinz("bnelo12", new OnCompleteListener<DocumentSnapshot>() {
+        FireStoreAPI.getInstance().getUserData("bnelo12", new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
+                        HashMap<String, Object> userDataSerial = (HashMap<String, Object>)FireStoreAPI.getTaskResult(task);
+                        ExchangeRate exchangeRate = LocalStorageAPI.readExchangeRate(getApplicationContext());
+//                        LocalStorageAPI.storeUserCoinzData(getApplicationContext(), userDataSerial, exchangeRate);
                         final Intent transitonIntent = new Intent(LoadingActivity.this, CoinzNavigationActivity.class);
                         startActivity(transitonIntent);
                     } else {

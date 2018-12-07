@@ -70,13 +70,13 @@ public class FireStoreAPI {
                 .addOnCompleteListener(onCompleteListener);
     }
 
-//    public void getUserData(
-//            String userName, OnCompleteListener<DocumentSnapshot> onCompleteListener) {
-//        db.collection("collectable_coinz")
-//                .document(user)
-//                .get()
-//                .addOnCompleteListener(onCompleteListener);
-//    }
+    public void getUserData(
+            String userName, OnCompleteListener<DocumentSnapshot> onCompleteListener) {
+        db.collection("users")
+                .document(userName)
+                .get()
+                .addOnCompleteListener(onCompleteListener);
+    }
 
     public void setUserData(String userName, UserCoinzData userCoinzData) {
         CollectionReference c = db.collection("users");
