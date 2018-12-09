@@ -42,7 +42,6 @@ public class MapScreenView extends Fragment implements LocationEngineListener {
     private HashMap<String, Coin> closestCoinz;
     private boolean buttonVisble = false;
     private MapboxMap currentMap = null;
-    private Button collecetCoinzButton = null;
 
     private void initMap() {
         mapView.setStyleUrl(this.getString(R.string.mapbox_style_url));
@@ -80,6 +79,7 @@ public class MapScreenView extends Fragment implements LocationEngineListener {
         }
         else {
             Log.d("MapScreenView", "[handleAbleToCollectCoinz] can collect coinz");
+            Button collecetCoinzButton = getView().findViewById(R.id.collect_coinz_button);
             slideCollectButtonUp(collecetCoinzButton);
             buttonVisble = true;
         }
@@ -99,6 +99,7 @@ public class MapScreenView extends Fragment implements LocationEngineListener {
             if (closestCoinz.size() > 0) {
                 handleAbleToCollectCoinz(closestCoinz);
             } else {
+                Button collecetCoinzButton = getView().findViewById(R.id.collect_coinz_button);
                 slideCollectButtonDown(collecetCoinzButton);
             }
         }
@@ -118,7 +119,6 @@ public class MapScreenView extends Fragment implements LocationEngineListener {
         mapMessage.emitText();
         mapView.onCreate(savedInstanceState);
         Button collectCoinzButton = view.findViewById(R.id.collect_coinz_button);
-        this.collecetCoinzButton = collectCoinzButton;
         collectCoinzButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -163,6 +163,8 @@ public class MapScreenView extends Fragment implements LocationEngineListener {
     public void onResume() {
         Log.d("Resumeing", "Resuming MapView");
         super.onResume();
+        Button collecetCoinzButton = getView().findViewById(R.id.collect_coinz_button);
+        slideCollectButtonDown(collecetCoinzButton);
         initMap();
     }
 
