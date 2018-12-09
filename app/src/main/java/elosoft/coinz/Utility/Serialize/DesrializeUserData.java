@@ -13,7 +13,8 @@ public class DesrializeUserData {
                 (double)userDataSerial.get("num_SHIL"),
                 (double)userDataSerial.get("num_DOLR"),
                 (double)userDataSerial.get("num_QUID"),
-                exchangeRate
+                exchangeRate,
+                (double)userDataSerial.get("num_GOLD")
         );
     }
 }

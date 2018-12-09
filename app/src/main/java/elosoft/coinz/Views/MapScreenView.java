@@ -18,7 +18,6 @@ import com.mapbox.mapboxsdk.location.LocationComponent;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import elosoft.coinz.Activities.CollectCoinzActivity;
@@ -43,11 +42,13 @@ public class MapScreenView extends Fragment implements LocationEngineListener {
     private HashMap<String, Coin> closestCoinz;
     private boolean buttonVisble = false;
     private MapboxMap currentMap = null;
+    private Button collecetCoinzButton = null;
 
     private void initMap() {
         mapView.setStyleUrl(this.getString(R.string.mapbox_style_url));
         mapView.getMapAsync((MapboxMap mapboxMap) -> {
             applyGameSettingsToMap(mapboxMap);
+            this.currentMap = mapboxMap;
             if (checkMapPermissions(getContext())){
                 mapMessage.appendText(" %n Please enable location tracking in application settings.");
             } else {
@@ -79,14 +80,8 @@ public class MapScreenView extends Fragment implements LocationEngineListener {
         }
         else {
             Log.d("MapScreenView", "[handleAbleToCollectCoinz] can collect coinz");
-            if (buttonVisble == false) {
-                Animation slide_up = AnimationUtils.loadAnimation(getContext(),
-                        R.anim.slide_up);
-                Button getCoinzButton = getView().findViewById(R.id.collect_coinz_button);
-                getCoinzButton.setVisibility(View.VISIBLE);
-                getCoinzButton.startAnimation(slide_up);
-                buttonVisble = true;
-            }
+            slideCollectButtonUp(collecetCoinzButton);
+            buttonVisble = true;
         }
     }
 
@@ -103,12 +98,8 @@ public class MapScreenView extends Fragment implements LocationEngineListener {
             closestCoinz = findCoinzWithinDistance(location, this.coinz, 25);
             if (closestCoinz.size() > 0) {
                 handleAbleToCollectCoinz(closestCoinz);
-            }
-            else if (buttonVisble) {
-                Animation slide_down = AnimationUtils.loadAnimation(getContext(),
-                        R.anim.slide_down);
-                getView().findViewById(R.id.collect_coinz_button).startAnimation(slide_down);
-                buttonVisble = false;
+            } else {
+                slideCollectButtonDown(collecetCoinzButton);
             }
         }
     }
@@ -127,6 +118,7 @@ public class MapScreenView extends Fragment implements LocationEngineListener {
         mapMessage.emitText();
         mapView.onCreate(savedInstanceState);
         Button collectCoinzButton = view.findViewById(R.id.collect_coinz_button);
+        this.collecetCoinzButton = collectCoinzButton;
         collectCoinzButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,7 +132,25 @@ public class MapScreenView extends Fragment implements LocationEngineListener {
                 startActivity(transitionIntent, activityOptions.toBundle());
             }
         });
-        initMap();
+    }
+
+    private void slideCollectButtonUp(Button collecetCoinzButton) {
+        if (!buttonVisble) {
+            collecetCoinzButton.setVisibility(View.VISIBLE);
+            Animation slide_up = AnimationUtils.loadAnimation(getContext(),
+                    R.anim.slide_up);
+            collecetCoinzButton.startAnimation(slide_up);
+            buttonVisble = true;
+        }
+    }
+
+    private void slideCollectButtonDown(Button collecetCoinzButton) {
+        if (buttonVisble) {
+            Animation slide_down = AnimationUtils.loadAnimation(getContext(),
+                    R.anim.slide_down);
+            collecetCoinzButton.startAnimation(slide_down);
+            buttonVisble = false;
+        }
     }
 
     @Override
@@ -151,11 +161,9 @@ public class MapScreenView extends Fragment implements LocationEngineListener {
 
     @Override
     public void onResume() {
+        Log.d("Resumeing", "Resuming MapView");
         super.onResume();
-        mapView.onResume();
-        if (currentMap != null) {
-            asyncFetchMapIcons(currentMap);
-        }
+        initMap();
     }
 
     @Override

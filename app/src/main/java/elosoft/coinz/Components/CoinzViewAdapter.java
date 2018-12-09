@@ -6,19 +6,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import elosoft.coinz.Models.Coin;
+import elosoft.coinz.Models.DrawableCoin;
 import elosoft.coinz.R;
 
 public class CoinzViewAdapter extends BaseAdapter {
 
     private final Context appContext;
-    private final ArrayList<Coin> coinz;
+    private final ArrayList<DrawableCoin> coinz;
 
-    public CoinzViewAdapter(Context context, ArrayList<Coin> coinz) {
+    public CoinzViewAdapter(Context context, ArrayList<DrawableCoin> coinz) {
         this.appContext = context;
         this.coinz = coinz;
     }
@@ -40,7 +43,8 @@ public class CoinzViewAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final Coin coin = coinz.get(position);
+        final  DrawableCoin drawableCoin = coinz.get(position);
+        final Coin coin = drawableCoin.getCoin();
 
         if (convertView == null) {
             final LayoutInflater layoutInflater = LayoutInflater.from(appContext);
@@ -58,10 +62,19 @@ public class CoinzViewAdapter extends BaseAdapter {
         }
 
         final ImageView imageView = (ImageView)convertView.findViewById(R.id.coin_grid_cell_coin_icon);
-        final TextView textView = (TextView)convertView.findViewById(R.id.textview_coin_value);
+        final TextView textViewCoinValue = (TextView)convertView.findViewById(R.id.textview_coin_value);
+        final TextView textViewCoinType = (TextView)convertView.findViewById(R.id.textview_coin_type);
+        final LinearLayout linearLayout = convertView.findViewById(R.id.coin_layout);
+
+        if (drawableCoin.isSelected) {
+            linearLayout.setBackgroundResource(R.drawable.white_border);
+        } else {
+            linearLayout.setBackgroundResource(0);
+        }
 
         imageView.setImageResource(imageResourceID);
-        textView.setText(String.format("%5f", coin.value));
+        textViewCoinValue.setText(String.format("%5f", coin.value));
+        textViewCoinType.setText(String.format("%s", coin.type.toString()));
 
         return convertView;
     }

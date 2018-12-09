@@ -12,6 +12,7 @@ public class SerializeUserData {
             userDataSerial.put("num_SHIL", userCoinzData.getNumSHIL());
             userDataSerial.put("num_DOLR", userCoinzData.getNumDOLR());
             userDataSerial.put("num_QUID", userCoinzData.getNumQUID());
+            userDataSerial.put("num_GOLD", userCoinzData.getNumGOLD());
             return userDataSerial;
     }
 }

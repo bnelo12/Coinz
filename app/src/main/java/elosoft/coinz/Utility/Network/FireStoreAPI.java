@@ -121,4 +121,14 @@ public class FireStoreAPI {
         }
         docRef.update(updates);
     }
+
+    public void removeUserDepositedCoinz(
+            String user, Collection<Coin> coinz) {
+        DocumentReference docRef = db.collection("collected_coinz").document(user);
+        Map<String,Object> updates = new HashMap<>();
+        for(Coin coin : coinz) {
+            updates.put(coin.id, FieldValue.delete());
+        }
+        docRef.update(updates);
+    }
 }

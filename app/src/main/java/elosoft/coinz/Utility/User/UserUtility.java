@@ -23,7 +23,7 @@ public class UserUtility {
         HashMap<String, Coin> collectableCoinz = deserializeCoinzFromGeoJSON(geoJSON);
         HashMap<String, Coin> collectedCoins = new HashMap<>();
         ExchangeRate coinExchangeRates = deserializeExchangeRateFromGeoJSON(geoJSON);
-        UserCoinzData userCoinzData = new UserCoinzData(collectedCoins, coinExchangeRates);
+        UserCoinzData userCoinzData = new UserCoinzData(collectedCoins, coinExchangeRates, 0);
         LocalStorageAPI.storeExchangeRate(appContext, coinExchangeRates);
         LocalStorageAPI.storeUserCoinzData(appContext, userCoinzData);
         fs.setUserCollectableCoinz(userName, collectableCoinz);
@@ -31,7 +31,9 @@ public class UserUtility {
         fs.setUserData(userName, userCoinzData);
     }
 
-    public static void syncLocalUserDataWithFireStore() {
-
+    public static void syncLocalUserDataWithFireStore(Context appContext) {
+        ExchangeRate exchangeRate = LocalStorageAPI.readExchangeRate(appContext);
+        UserCoinzData userCoinzData = LocalStorageAPI.readUserCoinzData(appContext, exchangeRate);
+        FireStoreAPI.getInstance().setUserData("bnelo12", userCoinzData);
     }
 }

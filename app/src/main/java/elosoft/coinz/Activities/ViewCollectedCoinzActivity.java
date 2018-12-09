@@ -17,7 +17,10 @@ import java.util.HashMap;
 import elosoft.coinz.Components.CoinzViewAdapter;
 import elosoft.coinz.Components.TextEmitter;
 import elosoft.coinz.Models.Coin;
+import elosoft.coinz.Models.DrawableCoin;
+import elosoft.coinz.Models.ExchangeRate;
 import elosoft.coinz.R;
+import elosoft.coinz.Utility.LocalStorage.LocalStorageAPI;
 import elosoft.coinz.Utility.Network.FireStoreAPI;
 
 import static elosoft.coinz.Utility.Serialize.DeserializeCoin.deserializeCoinzFromFireStore;
@@ -33,8 +36,12 @@ public class ViewCollectedCoinzActivity extends FragmentActivity {
             HashMap<String, Object> coinzData = (HashMap<String, Object>) FireStoreAPI
                     .getTaskResult(task);
             ArrayList<Coin> coinz = new ArrayList<>(deserializeCoinzFromFireStore(coinzData).values());
+            ArrayList<DrawableCoin> drawableCoins = new ArrayList<>();
+            for (Coin c : coinz) {
+                drawableCoins.add(new DrawableCoin(c, false));
+            }
             GridView gridView = findViewById(R.id.coinz_grid);
-            CoinzViewAdapter coinzAdapter = new CoinzViewAdapter(ViewCollectedCoinzActivity.this, coinz);
+            CoinzViewAdapter coinzAdapter = new CoinzViewAdapter(ViewCollectedCoinzActivity.this, drawableCoins);
             gridView.setAdapter(coinzAdapter);
             if (coinz.size() == 0) {
                 te.appendText("My lord, you haven't collected any coinz yet. Visit the map to find the coin locations.");
@@ -44,4 +51,6 @@ public class ViewCollectedCoinzActivity extends FragmentActivity {
             }
         });
     }
+
+
 }

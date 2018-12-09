@@ -14,5 +14,4 @@ public class CoinzView extends Fragment {
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.coinz_view, container, false);
     }
-
 }

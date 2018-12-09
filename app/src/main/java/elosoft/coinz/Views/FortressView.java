@@ -41,14 +41,14 @@ public class FortressView extends Fragment {
         TextView quidAmountGold = view.findViewById(R.id.fortress_quid_amount_gold_text);
         ExchangeRate exchangeRate = LocalStorageAPI.readExchangeRate(appContext);
         UserCoinzData userCoinzData = LocalStorageAPI.readUserCoinzData(appContext, exchangeRate);
-        penyAmount.setText(String.format("%5f", userCoinzData.getNumPENY()));
-        penyAmountGold.setText(String.format("%5f GOLD", userCoinzData.getNumPENYInGOLD()));
-        dolrAmount.setText(String.format("%5f", userCoinzData.getNumDOLR()));
-        dolrAmountGold.setText(String.format("%5f GOLD", userCoinzData.getNumDOLRInGOLD()));
-        shilAmount.setText(String.format("%5f", userCoinzData.getNumSHIL()));
-        shilAmountGold.setText(String.format("%5f GOLD", userCoinzData.getNumSHILInGOLD()));
-        quidAmount.setText(String.format("%5f", userCoinzData.getNumQUID()));
-        quidAmountGold.setText(String.format("%5f GOLD", userCoinzData.getNumQUIDInGOLD()));
+        penyAmount.setText(String.format("%.5f", userCoinzData.getNumPENY()));
+        penyAmountGold.setText(String.format("%.5f GOLD", userCoinzData.getNumPENYInGOLD()));
+        dolrAmount.setText(String.format("%.5f", userCoinzData.getNumDOLR()));
+        dolrAmountGold.setText(String.format("%.5f GOLD", userCoinzData.getNumDOLRInGOLD()));
+        shilAmount.setText(String.format("%.5f", userCoinzData.getNumSHIL()));
+        shilAmountGold.setText(String.format("%.5f GOLD", userCoinzData.getNumSHILInGOLD()));
+        quidAmount.setText(String.format("%.5f", userCoinzData.getNumQUID()));
+        quidAmountGold.setText(String.format("%.5f GOLD", userCoinzData.getNumQUIDInGOLD()));
         Button collectCoinzButton = view.findViewById(R.id.view_collected_coinz_button);
         collectCoinzButton.setOnClickListener(new View.OnClickListener() {
             @Override

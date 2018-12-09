@@ -13,6 +13,7 @@ import java.util.HashMap;
 import elosoft.coinz.Components.CoinzViewAdapter;
 import elosoft.coinz.Components.TextEmitter;
 import elosoft.coinz.Models.Coin;
+import elosoft.coinz.Models.DrawableCoin;
 import elosoft.coinz.R;
 
 import static elosoft.coinz.Utility.Serialize.DeserializeCoin.deserializeCoinz;
@@ -39,8 +40,12 @@ public class CollectCoinzActivity extends FragmentActivity {
                 });
             }
         };
+        ArrayList<DrawableCoin> drawableCoins = new ArrayList<>();
+        for (Coin c : new ArrayList<Coin>(coinz.values())) {
+            drawableCoins.add(new DrawableCoin(c, false));
+        }
         GridView gridView = (GridView)findViewById(R.id.coinz_grid);
-        CoinzViewAdapter coinzAdapter = new CoinzViewAdapter(this, new ArrayList<Coin>(coinz.values()));
+        CoinzViewAdapter coinzAdapter = new CoinzViewAdapter(this, drawableCoins);
         gridView.setAdapter(coinzAdapter);
     }
 }

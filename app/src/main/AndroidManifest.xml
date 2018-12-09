@@ -23,8 +23,8 @@
         <activity android:name=".Activities.ViewCollectedCoinzActivity"/>
         <activity android:name=".Activities.CollectCoinzActivity"/>
         <activity android:name=".Activities.IntroductionActivity"/>
-        <activity android:name=".Activities.CoinzNavigationActivity">
-        </activity>
+        <activity android:name=".Activities.CoinzNavigationActivity"/>
+        <activity android:name=".Activities.DepositCoinzActivity"/>
     </application>
 
 </manifest>

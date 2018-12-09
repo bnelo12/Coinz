@@ -8,9 +8,13 @@ public class UserCoinzData {
     private double numSHIL;
     private double numDOLR;
     private double numQUID;
+    private double numGOLD;
+
     private ExchangeRate exchangeRate;
 
-    public UserCoinzData(HashMap<String, Coin> collectedCoinz, ExchangeRate exchangeRate) {
+    public UserCoinzData(HashMap<String, Coin> collectedCoinz, ExchangeRate exchangeRate,
+                         double numGOLD) {
+        this.numGOLD = numGOLD;
         this.exchangeRate = exchangeRate;
         numPENY = 0;
         numSHIL = 0;
@@ -28,12 +32,14 @@ public class UserCoinzData {
     }
 
     public UserCoinzData(double numPENY, double numSHIL, double numDOLR,
-                         double numQUID, ExchangeRate exchangeRate) {
+                         double numQUID, ExchangeRate exchangeRate,
+                         double numGOLD) {
         this.exchangeRate = exchangeRate;
         this.numPENY = numPENY;
         this.numSHIL = numSHIL;
         this.numDOLR = numDOLR;
         this.numQUID = numQUID;
+        this.numGOLD = numGOLD;
     }
 
     public double getNumPENY() {
@@ -50,6 +56,10 @@ public class UserCoinzData {
 
     public double getNumQUID() {
         return numQUID;
+    }
+
+    public double getNumGOLD() {
+        return numGOLD;
     }
 
     public double getNumPENYInGOLD() {
