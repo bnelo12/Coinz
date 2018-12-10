@@ -6,7 +6,7 @@ import static elosoft.coinz.Utility.Serialize.DeserializeCoin.stringToType;
 
 public class Coin {
 
-    public static enum Type {
+    public enum Type {
         PENY, DOLR, SHIL, QUID, GOLD
     }
 

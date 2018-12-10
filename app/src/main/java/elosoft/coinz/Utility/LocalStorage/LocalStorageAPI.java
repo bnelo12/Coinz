@@ -17,6 +17,22 @@ import static elosoft.coinz.Utility.User.UserUtility.syncLocalUserDataWithFireSt
 
 public class LocalStorageAPI {
 
+    public static void storeLoggedInUserName(Context appContext, String userName) {
+        SharedPreferences sharedPref = PreferenceManager
+                .getDefaultSharedPreferences(appContext);
+        Editor editor = sharedPref.edit();
+        editor.putString("USER_NAME", userName);
+        asyncCommit(editor, appContext);
+    }
+
+    public static String getLoggedInUserName(Context appContext) {
+        SharedPreferences sharedPref = PreferenceManager
+                .getDefaultSharedPreferences(appContext);
+        String userName = sharedPref.getString("USER_NAME", "UNKNOWN_USER");
+        return userName;
+    }
+
+
     public static void storeExchangeRate(Context appContext, ExchangeRate exchangeRate) {
         SharedPreferences sharedPref = PreferenceManager
                 .getDefaultSharedPreferences(appContext);

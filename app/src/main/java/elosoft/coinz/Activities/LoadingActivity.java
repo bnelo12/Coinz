@@ -8,22 +8,16 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 
-import java.util.Date;
 import java.util.HashMap;
 
 import elosoft.coinz.Models.ExchangeRate;
-import elosoft.coinz.Models.UserCoinzData;
 import elosoft.coinz.Utility.LocalStorage.LocalStorageAPI;
 import elosoft.coinz.Utility.Network.EdAPI;
 import elosoft.coinz.Utility.Serialize.DeserializeCoin;
 import elosoft.coinz.Utility.Network.FireStoreAPI;
 import elosoft.coinz.Components.TextEmitter;
-import elosoft.coinz.Models.Coin;
 import elosoft.coinz.R;
-import elosoft.coinz.Utility.Serialize.DeserializeExchangeRate;
 import elosoft.coinz.Utility.User.UserUtility;
-
-import static elosoft.coinz.Utility.Serialize.DeserializeCoin.deserializeCoinzFromGeoJSON;
 
 public class LoadingActivity extends Activity {
     private TextEmitter loadingTextEmitter;
@@ -41,7 +35,13 @@ public class LoadingActivity extends Activity {
     private void loadCoinzFromFireStore() {
         loadingTextEmitter.appendText(" %n Getting User Data . . .");
         // Attempt to load user data
-        FireStoreAPI.getInstance().getUserData("bnelo12", new OnCompleteListener<DocumentSnapshot>() {
+        String currentUser = LocalStorageAPI.getLoggedInUserName(getApplicationContext());
+        if (currentUser.equals("UNKNOWN_USER")) {
+            loadingTextEmitter.appendText(" %n New user detected. Creating Account . . .");
+            createUser();
+            return;
+        }
+        FireStoreAPI.getInstance().getUserData(currentUser, new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -53,7 +53,6 @@ public class LoadingActivity extends Activity {
                         final Intent transitonIntent = new Intent(LoadingActivity.this, CoinzNavigationActivity.class);
                         startActivity(transitonIntent);
                     } else {
-                        loadingTextEmitter.appendText(" %n New user detected. Creating Account . . .");
                         createUser();
                     }
                 } else {
@@ -65,10 +64,10 @@ public class LoadingActivity extends Activity {
 
     private void createUser() {
         loadingTextEmitter.appendText(" %n Connecting to Server . . .");
-        EdAPI.getInstance().getCoinzGeoJSON(new Date(), getApplicationContext(),
+        EdAPI.getInstance().getCoinzGeoJSON(getApplicationContext(),
                 geoJSON -> {
                     try {
-                        UserUtility.createNewUser(getApplicationContext(), geoJSON, "bnelo12");
+                        UserUtility.createNewUser(getApplicationContext(), geoJSON, "a123");
                         loadingTextEmitter.appendText(" %n Coinz Downloaded");
                         loadingTextEmitter.onComplete = () -> {
                             final Intent transitonIntent = new Intent(LoadingActivity.this, CoinzNavigationActivity.class);

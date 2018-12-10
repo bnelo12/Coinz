@@ -32,7 +32,8 @@ public class ViewCollectedCoinzActivity extends FragmentActivity {
         setContentView(R.layout.activity_view_collected_coinz);
         TextEmitter te = findViewById(R.id.collect_coinz_emitter);
         te.emitText();
-        FireStoreAPI.getInstance().getUserCollectedCoinz("bnelo12", task -> {
+        String currentUser = LocalStorageAPI.getLoggedInUserName(getApplicationContext());
+        FireStoreAPI.getInstance().getUserCollectedCoinz(currentUser, task -> {
             HashMap<String, Object> coinzData = (HashMap<String, Object>) FireStoreAPI
                     .getTaskResult(task);
             ArrayList<Coin> coinz = new ArrayList<>(deserializeCoinzFromFireStore(coinzData).values());

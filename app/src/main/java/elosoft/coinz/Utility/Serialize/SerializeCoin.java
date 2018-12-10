@@ -1,6 +1,5 @@
 package elosoft.coinz.Utility.Serialize;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import elosoft.coinz.Models.Coin;
@@ -8,7 +7,7 @@ import elosoft.coinz.Models.Coin;
 public class SerializeCoin {
 
     public static HashMap<String, Object> serializeCoinForFirestore(Coin c) {
-        HashMap<String, Object> coinData = new HashMap();
+        HashMap<String, Object> coinData = new HashMap<>();
         coinData.put("id", c.id);
         coinData.put("value", c.value);
         coinData.put("type", c.type.name());
@@ -17,16 +16,16 @@ public class SerializeCoin {
         return coinData;
     }
 
-    public static HashMap<String, Object> seralizeCoinzForFirestore(HashMap<String, Coin> coinz) {
-        HashMap<String, Object> coinzData = new HashMap();
+    public static HashMap<String, Object> serializeCoinzForFirestore(HashMap<String, Coin> coinz) {
+        HashMap<String, Object> coinzData = new HashMap<>();
         for (Coin c : coinz.values()) {
             coinzData.put(c.id, serializeCoinForFirestore(c));
         }
         return coinzData;
     }
 
-    public static HashMap<String, Object> seralizeCoinz(HashMap<String, Coin> coinz) {
-        return seralizeCoinzForFirestore(coinz);
+    public static HashMap<String, Object> serializeCoinz(HashMap<String, Coin> coinz) {
+        return serializeCoinzForFirestore(coinz);
     }
 
 }

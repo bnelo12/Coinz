@@ -9,16 +9,18 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import elosoft.coinz.Models.Coin;
+import elosoft.coinz.Models.Trade;
 import elosoft.coinz.Models.UserCoinzData;
 
-import static elosoft.coinz.Utility.Serialize.SerializeCoin.seralizeCoinzForFirestore;
+import static elosoft.coinz.Utility.Serialize.SerializeCoin.serializeCoinzForFirestore;
 import static elosoft.coinz.Utility.Serialize.SerializeCoin.serializeCoinForFirestore;
+import static elosoft.coinz.Utility.Serialize.SerializeTrade.serializeTradeForFirestore;
 import static elosoft.coinz.Utility.Serialize.SerializeUserData.serializeUserDataForFireStore;
 
 public class FireStoreAPI {
@@ -85,12 +87,30 @@ public class FireStoreAPI {
 
     public void setUserCollectableCoinz(String user, HashMap<String, Coin> coinz) {
         CollectionReference c = db.collection("collectable_coinz");
-        c.document(user).set(seralizeCoinzForFirestore(coinz));
+        c.document(user).set(serializeCoinzForFirestore(coinz));
+    }
+
+    public void addTrade(Trade trade) {
+        DocumentReference docRefPending = db.collection("pending_trades").document(trade.getPartner());
+        DocumentReference docRefSent = db.collection("sent_trades").document(trade.getUser());
+
+        String tradeId = UUID.randomUUID().toString();
+        Map<String, Object> updates = new HashMap<>();
+        updates.put(tradeId, serializeTradeForFirestore(trade));
+        docRefPending.update(updates);
+        docRefSent.update(updates);
+    }
+
+    public void initTrades(String user) {
+        DocumentReference docRefPending = db.collection("pending_trades").document(user);
+        DocumentReference docRefSent = db.collection("sent_trades").document(user);
+        docRefPending.set(new HashMap<>());
+        docRefSent.set(new HashMap<>());
     }
 
     public void setUserCollectedCoinz(String user, HashMap<String, Coin> coinz) {
         CollectionReference c = db.collection("collected_coinz");
-        c.document(user).set(seralizeCoinzForFirestore(coinz));
+        c.document(user).set(serializeCoinzForFirestore(coinz));
     }
 
     public void getUserCollectedCoinz(

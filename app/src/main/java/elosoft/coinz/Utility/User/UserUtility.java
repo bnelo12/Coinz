@@ -4,6 +4,7 @@ import android.content.Context;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import elosoft.coinz.Models.Coin;
@@ -20,20 +21,29 @@ public class UserUtility {
     public static void createNewUser(Context appContext, JSONObject geoJSON, String userName)
             throws DeserializeCoin.CoinzGeoJSONParseError {
         FireStoreAPI fs = FireStoreAPI.getInstance();
-        HashMap<String, Coin> collectableCoinz = deserializeCoinzFromGeoJSON(geoJSON);
+        HashMap<String, Coin> collectibleCoinz = deserializeCoinzFromGeoJSON(geoJSON);
         HashMap<String, Coin> collectedCoins = new HashMap<>();
         ExchangeRate coinExchangeRates = deserializeExchangeRateFromGeoJSON(geoJSON);
         UserCoinzData userCoinzData = new UserCoinzData(collectedCoins, coinExchangeRates, 0);
         LocalStorageAPI.storeExchangeRate(appContext, coinExchangeRates);
         LocalStorageAPI.storeUserCoinzData(appContext, userCoinzData);
-        fs.setUserCollectableCoinz(userName, collectableCoinz);
+        fs.setUserCollectableCoinz(userName, collectibleCoinz);
         fs.setUserCollectedCoinz(userName, collectedCoins);
         fs.setUserData(userName, userCoinzData);
+        fs.initTrades(userName);
+        LocalStorageAPI.storeLoggedInUserName(appContext, userName);
+    }
+
+    public static void removeUserCoinz(Context appContext, ArrayList<Coin> userCoinz) {
+        String currentUser = LocalStorageAPI.getLoggedInUserName(appContext);
+        LocalStorageAPI.removeUserCoinzData(appContext, userCoinz);
+        FireStoreAPI.getInstance().removeUserDepositedCoinz(currentUser, userCoinz);
     }
 
     public static void syncLocalUserDataWithFireStore(Context appContext) {
         ExchangeRate exchangeRate = LocalStorageAPI.readExchangeRate(appContext);
         UserCoinzData userCoinzData = LocalStorageAPI.readUserCoinzData(appContext, exchangeRate);
-        FireStoreAPI.getInstance().setUserData("bnelo12", userCoinzData);
+        String currentUser = LocalStorageAPI.getLoggedInUserName(appContext);
+        FireStoreAPI.getInstance().setUserData(currentUser, userCoinzData);
     }
 }

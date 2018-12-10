@@ -13,7 +13,7 @@ import java.util.Date;
 
 public class EdAPI {
     private static volatile EdAPI instance;
-    private static Object mutex = new Object();
+    private static final Object mutex = new Object();
 
     private EdAPI() {
 
@@ -31,7 +31,7 @@ public class EdAPI {
     }
 
     public void getCoinzGeoJSON(
-            Date date, Context appContext, Listener<JSONObject> onSuccessListener,
+            Context appContext, Listener<JSONObject> onSuccessListener,
             Response.ErrorListener onErrorListener) {
         String url = "http://homepages.inf.ed.ac.uk/stg/coinz/2018/01/01/coinzmap.geojson";
         JsonObjectRequest getCoinzDataRequest = new JsonObjectRequest(

@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Locale;
 
 import elosoft.coinz.Models.Coin;
 import elosoft.coinz.Models.DrawableCoin;
@@ -19,7 +19,7 @@ import elosoft.coinz.R;
 public class CoinzViewAdapter extends BaseAdapter {
 
     private final Context appContext;
-    private final ArrayList<DrawableCoin> coinz;
+    public final ArrayList<DrawableCoin> coinz;
 
     public CoinzViewAdapter(Context context, ArrayList<DrawableCoin> coinz) {
         this.appContext = context;
@@ -61,9 +61,9 @@ public class CoinzViewAdapter extends BaseAdapter {
             default: break;
         }
 
-        final ImageView imageView = (ImageView)convertView.findViewById(R.id.coin_grid_cell_coin_icon);
-        final TextView textViewCoinValue = (TextView)convertView.findViewById(R.id.textview_coin_value);
-        final TextView textViewCoinType = (TextView)convertView.findViewById(R.id.textview_coin_type);
+        final ImageView imageView = convertView.findViewById(R.id.coin_grid_cell_coin_icon);
+        final TextView textViewCoinValue = convertView.findViewById(R.id.textview_coin_value);
+        final TextView textViewCoinType = convertView.findViewById(R.id.textview_coin_type);
         final LinearLayout linearLayout = convertView.findViewById(R.id.coin_layout);
 
         if (drawableCoin.isSelected) {
@@ -73,7 +73,7 @@ public class CoinzViewAdapter extends BaseAdapter {
         }
 
         imageView.setImageResource(imageResourceID);
-        textViewCoinValue.setText(String.format("%5f", coin.value));
+        textViewCoinValue.setText(String.format(Locale.getDefault(), "%5f", coin.value));
         textViewCoinType.setText(String.format("%s", coin.type.toString()));
 
         return convertView;

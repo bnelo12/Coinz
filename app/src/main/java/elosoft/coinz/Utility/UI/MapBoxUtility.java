@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.util.Log;
 
 import com.mapbox.mapboxsdk.annotations.IconFactory;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
@@ -13,17 +12,14 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import elosoft.coinz.Models.Coin;
 import elosoft.coinz.R;
 
-import static elosoft.coinz.Utility.Serialize.DeserializeCoin.deserializeCoinFromFireStore;
-
 public class MapBoxUtility {
 
-    public static void addCoinToMap(MapboxMap mapboxMap, Coin coin, Context appContext) {
+    private static void addCoinToMap(MapboxMap mapboxMap, Coin coin, Context appContext) {
         int resourceId = R.drawable.icon_gold_coin;
         switch (coin.type) {
             case DOLR: resourceId = R.drawable.icon_dolr_coin; break;

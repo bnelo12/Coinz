@@ -27,11 +27,9 @@ public class CoinzNavigationActivity extends FragmentActivity {
     private TradingFloorView tradingFloorView = new TradingFloorView();
     private FragmentManager fragmentManager = getSupportFragmentManager();
 
-    private final Map<SubViewType, Fragment.SavedState> mFragmentStates = new HashMap<>();
-
     private enum SubViewType {
         FORTRESS, TRADING_FLOOR, BANK, MAP, SETTINGS
-    };
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

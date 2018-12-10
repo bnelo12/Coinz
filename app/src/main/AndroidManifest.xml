@@ -25,6 +25,7 @@
         <activity android:name=".Activities.IntroductionActivity"/>
         <activity android:name=".Activities.CoinzNavigationActivity"/>
         <activity android:name=".Activities.DepositCoinzActivity"/>
+        <activity android:name=".Activities.TradeActivity"/>
     </application>
 
 </manifest>

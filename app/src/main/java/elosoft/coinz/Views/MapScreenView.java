@@ -28,7 +28,7 @@ import elosoft.coinz.Utility.Network.FireStoreAPI;
 import elosoft.coinz.R;
 
 import static elosoft.coinz.Utility.Serialize.DeserializeCoin.deserializeCoinzFromFireStore;
-import static elosoft.coinz.Utility.Serialize.SerializeCoin.seralizeCoinz;
+import static elosoft.coinz.Utility.Serialize.SerializeCoin.serializeCoinz;
 import static elosoft.coinz.Utility.UI.MapBoxUtility.addCoinzToMap;
 import static elosoft.coinz.Utility.UI.MapBoxUtility.applyGameSettingsToMap;
 import static elosoft.coinz.Utility.UI.MapBoxUtility.checkMapPermissions;
@@ -62,7 +62,8 @@ public class MapScreenView extends Fragment implements LocationEngineListener {
     }
 
     private void asyncFetchMapIcons(MapboxMap mapboxMap) {
-        FireStoreAPI.getInstance().getUserCollectableCoinz("bnelo12", task -> {
+        String currentUser = LocalStorageAPI.getLoggedInUserName(getActivity().getApplicationContext());
+        FireStoreAPI.getInstance().getUserCollectableCoinz(currentUser, task -> {
             HashMap<String, Object> coinzData = (HashMap<String, Object>) FireStoreAPI
                     .getTaskResult(task);
             coinz = deserializeCoinzFromFireStore(coinzData);
@@ -122,12 +123,13 @@ public class MapScreenView extends Fragment implements LocationEngineListener {
         collectCoinzButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FireStoreAPI.getInstance().removeUserCollectableCoinz("bnelo12", closestCoinz.values(), null);
-                FireStoreAPI.getInstance().addUserCollectedCoinz("bnelo12", closestCoinz.values());
+                String currentUser = LocalStorageAPI.getLoggedInUserName(getActivity().getApplicationContext());
+                FireStoreAPI.getInstance().removeUserCollectableCoinz(currentUser, closestCoinz.values(), null);
+                FireStoreAPI.getInstance().addUserCollectedCoinz(currentUser, closestCoinz.values());
                 LocalStorageAPI.updateUserCoinzData(getContext().getApplicationContext(), closestCoinz.values());
                 Intent transitionIntent = new Intent(getActivity(), CollectCoinzActivity.class);
                 transitionIntent.putExtra("NUMBER_OF_COINZ", closestCoinz.size());
-                transitionIntent.putExtra("COINZ", seralizeCoinz(closestCoinz));
+                transitionIntent.putExtra("COINZ", serializeCoinz(closestCoinz));
                 ActivityOptions activityOptions = ActivityOptions.makeSceneTransitionAnimation(getActivity());
                 startActivity(transitionIntent, activityOptions.toBundle());
             }
@@ -161,7 +163,7 @@ public class MapScreenView extends Fragment implements LocationEngineListener {
 
     @Override
     public void onResume() {
-        Log.d("Resumeing", "Resuming MapView");
+        Log.d("Resuming", "Resuming MapView");
         super.onResume();
         Button collecetCoinzButton = getView().findViewById(R.id.collect_coinz_button);
         slideCollectButtonDown(collecetCoinzButton);

@@ -2,10 +2,7 @@ package elosoft.coinz.Components;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.SearchView;
 import android.widget.TextView;
 
 import elosoft.coinz.R;
@@ -18,6 +15,12 @@ public class EightBitRetroKeyBoard extends RelativeLayout {
         inflate(context, R.layout.keyboard, this);
         init();
     }
+
+    public void addOnDoneKeyPressedListener(OnClickListener listener) {
+        TextView done_key = this.findViewById(R.id.key_done);
+        done_key.setOnClickListener(listener);
+    }
+
 
     private void init() {
         TextView one_key = this.findViewById(R.id.key_1);
@@ -56,36 +59,19 @@ public class EightBitRetroKeyBoard extends RelativeLayout {
         TextView b_key = this.findViewById(R.id.key_b);
         TextView n_key = this.findViewById(R.id.key_n);
         TextView m_key = this.findViewById(R.id.key_m);
-        TextView done_key = this.findViewById(R.id.key_done);
         TextView back_key = this.findViewById(R.id.key_back);
 
-        OnClickListener handleKeyPress = new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TextView tv =  (TextView) v;
-                textEmitter.addString(tv.getText().toString());
+        OnClickListener handleKeyPress = v -> {
+            TextView tv =  (TextView) v;
+            textEmitter.addString(tv.getText().toString());
+        };
+
+        OnClickListener handleBackKeyPress = v -> {
+            if (textEmitter.userInputMode) {
+                textEmitter.backSpace();
             }
         };
 
-        OnClickListener handleBackKeyPress = new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (textEmitter.userInputMode) {
-                    textEmitter.backSpace();
-                }
-            }
-        };
-
-        OnClickListener handleDoneKeyPress = new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (textEmitter.userInputMode) {
-                    textEmitter.addUserInputAndContinue();
-                }
-            }
-        };
-
-        done_key.setOnClickListener(handleDoneKeyPress);
         back_key.setOnClickListener(handleBackKeyPress);
         one_key.setOnClickListener(handleKeyPress);
         two_key.setOnClickListener(handleKeyPress);

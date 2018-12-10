@@ -20,6 +20,7 @@ import elosoft.coinz.Models.UserCoinzData;
 import elosoft.coinz.R;
 import elosoft.coinz.Utility.LocalStorage.LocalStorageAPI;
 import elosoft.coinz.Utility.Network.FireStoreAPI;
+import elosoft.coinz.Utility.User.UserUtility;
 
 import static elosoft.coinz.Utility.Serialize.DeserializeCoin.deserializeCoinzFromFireStore;
 
@@ -33,7 +34,8 @@ public class DepositCoinzActivity extends FragmentActivity {
         setContentView(R.layout.activity_deposit_coinz);
         TextEmitter te = findViewById(R.id.d_coinz_emitter_coinz_emitter);
         te.emitText();
-        FireStoreAPI.getInstance().getUserCollectedCoinz("bnelo12", task -> {
+        String currentUser = LocalStorageAPI.getLoggedInUserName(getApplicationContext());
+        FireStoreAPI.getInstance().getUserCollectedCoinz(currentUser, task -> {
             HashMap<String, Object> coinzData = (HashMap<String, Object>) FireStoreAPI
                     .getTaskResult(task);
             ArrayList<Coin> coinz = new ArrayList<>(deserializeCoinzFromFireStore(coinzData).values());
@@ -103,8 +105,7 @@ public class DepositCoinzActivity extends FragmentActivity {
         Log.d("DepositCoinzActivity",
                 String.format("Adding %f GOLD to user account.", goldToAdd));
         LocalStorageAPI.updateUserGOLD(getApplicationContext(), goldToAdd);
-        LocalStorageAPI.removeUserCoinzData(getApplicationContext(), collectedCoinz);
-        FireStoreAPI.getInstance().removeUserDepositedCoinz("bnelo12", collectedCoinz);
+        UserUtility.removeUserCoinz(getApplicationContext(), collectedCoinz);
     }
 
     private void emitExchangeRates(TextEmitter emitter) {

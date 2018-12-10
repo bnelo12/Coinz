@@ -30,6 +30,7 @@ public class TextEmitter extends View {
     private Paint textPaint = new Paint();
     private EightBitRetroKeyBoard eightBitRetroKeyBoard;
     private int viewWidth = 0;
+    private int maxLines = 0;
     public boolean showCursor = true;
     public boolean paused = false;
     public boolean completed = false;
@@ -64,13 +65,18 @@ public class TextEmitter extends View {
                     return;
                 }
                 cursorPosition = 0;
-                currentLine += 1;
+                if (currentLine + 1 == maxLines) {
+                    textBlocks.remove(0);
+                } else {
+                    currentLine += 1;
+                }
             }
             mainLoopHandler.postDelayed(this, textRate);
         }
     };
 
     public Runnable onComplete = null;
+    private  Runnable onWaitingForUserInput = null;
 
     public TextEmitter(Context context, AttributeSet attrs){
         super(context, attrs);
@@ -96,9 +102,11 @@ public class TextEmitter extends View {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
                 viewWidth = right - left;
+                maxLines = (int)(bottom-top-20)/60;
                 if (viewWidth <= 0) return;
                 viewInitialized = true;
-                textBlocks = preProcessText(displayText);
+                textBlocks = preProcessText(displayText, currentLine);
+                TextEmitter.this.removeOnLayoutChangeListener(this);
             }
          });
 
@@ -109,12 +117,13 @@ public class TextEmitter extends View {
          });
     }
 
-    private ArrayList<String> preProcessText(String text) {
-        ArrayList<String> textBlocks = new ArrayList<String>();
+    private ArrayList<String> preProcessText(String text, int currentLine) {
+        if (textBlocks == null) {
+            textBlocks = new ArrayList<String>();
+        }
         textBlocks.add("");
         String[] splitString = text.split("\\s+");
         int runningLineLengthCount = 0;
-        int currentLine = 0;
         for (int i = 0; i < splitString.length; i++) {
             if (splitString[i].equals("%n")) {
                 runningLineLengthCount = 0;
@@ -154,9 +163,12 @@ public class TextEmitter extends View {
 
     public void appendText(String text) {
         completed = false;
-        displayText += text;
-        textBlocks = preProcessText(displayText);
-        this.continueEmit();
+        if (textBlocks == null) {
+            displayText += text;
+        } else {
+            textBlocks = preProcessText(text, textBlocks.size());
+            this.continueEmit();
+        }
     }
 
     public void continueEmit() {
@@ -169,6 +181,9 @@ public class TextEmitter extends View {
     public void getUserInput() {
         userInputMode = true;
         paused = true;
+        if (onWaitingForUserInput != null) {
+            onWaitingForUserInput.run();
+        }
     }
 
     public void pause() {
@@ -189,6 +204,10 @@ public class TextEmitter extends View {
         }
     }
 
+    public void addOnWaitingForUserInput(Runnable onWaitingForUserInput) {
+        this.onWaitingForUserInput = onWaitingForUserInput;
+    }
+
     public void addEightBitKeyBoard(EightBitRetroKeyBoard keyboard) {
         this.eightBitRetroKeyBoard = keyboard;
         keyboard.addTextEmitter(this);
@@ -201,6 +220,15 @@ public class TextEmitter extends View {
         currentUserInput = "";
         currentLine++;
         continueEmit();
+    }
+
+    public String popUserInput() {
+        userInputMode = false;
+        textBlocks.set(currentLine, textBlocks.get(currentLine).concat(this.currentUserInput));
+        String returnInput = currentUserInput;
+        currentUserInput = "";
+        cursorPosition += returnInput.length() - 1;
+        return returnInput;
     }
 
     @Override

@@ -6,7 +6,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import elosoft.coinz.Models.Coin;
@@ -30,7 +29,7 @@ public class DeserializeCoin {
 
     public static class CoinzGeoJSONParseError extends Exception {
         String errorMessage;
-        public  CoinzGeoJSONParseError(String error) {
+        CoinzGeoJSONParseError(String error) {
             errorMessage = error;
         }
         public String getErrorMessage() {
@@ -40,7 +39,7 @@ public class DeserializeCoin {
 
     public static HashMap<String, Coin> deserializeCoinzFromGeoJSON(JSONObject geojson)
             throws CoinzGeoJSONParseError {
-        HashMap<String, Coin> coinz = new HashMap();
+        HashMap<String, Coin> coinz = new HashMap<>();
         try {
             JSONArray features = geojson.getJSONArray("features");
             for (int i = 0; i < features.length(); i++) {
@@ -54,7 +53,7 @@ public class DeserializeCoin {
         return coinz;
     }
 
-    public static Coin deserializeCoinFromGeoJSON(JSONObject geoJSONFeature)
+    private static Coin deserializeCoinFromGeoJSON(JSONObject geoJSONFeature)
             throws CoinzGeoJSONParseError {
         try {
             JSONObject geometry = geoJSONFeature.getJSONObject("geometry");
@@ -71,7 +70,7 @@ public class DeserializeCoin {
         }
     }
 
-    public static Coin deserializeCoinFromFireStore(HashMap<String, Object> coin) {
+    private static Coin deserializeCoinFromFireStore(HashMap<String, Object> coin) {
         return new Coin((String)coin.get("id"), (String)coin.get("type"),
                 (double) coin.get("latitude"), (double)coin.get("longitude"),
                 (double) coin.get("value"));
@@ -85,7 +84,7 @@ public class DeserializeCoin {
 
     public static HashMap<String, Coin> deserializeCoinzFromFireStore(
             HashMap<String, Object> coinz) {
-        HashMap<String, Coin> coinzOut = new HashMap<String, Coin>();
+        HashMap<String, Coin> coinzOut = new HashMap<>();
         for (Object coinData : coinz.values()) {
             Coin coinToAdd = deserializeCoinFromFireStore((HashMap<String, Object>) coinData);
             coinzOut.put(coinToAdd.id, coinToAdd);
@@ -115,7 +114,6 @@ public class DeserializeCoin {
     }
 
     private static String parseType(JSONObject properties) throws JSONException {
-        String currency = properties.getString("currency");
-        return currency;
+        return properties.getString("currency");
     }
 }
