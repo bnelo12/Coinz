@@ -3,6 +3,9 @@ package elosoft.coinz.Utility.Serialize;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import elosoft.coinz.Models.ExchangeRate;
 
 public class DeserializeExchangeRate {
@@ -19,5 +22,14 @@ public class DeserializeExchangeRate {
         } catch (JSONException e) {
             throw new DeserializeCoin.CoinzGeoJSONParseError(e.getMessage());
         }
+    }
+    public static ExchangeRate deserializeExchangeRateFromFirestore(
+            Map<String, Object> exchangeRateSerial){
+        return new ExchangeRate(
+                (double)exchangeRateSerial.get("SHIL"),
+                (double)exchangeRateSerial.get("PENY"),
+                (double)exchangeRateSerial.get("DOLR"),
+                (double)exchangeRateSerial.get("QUID")
+        );
     }
 }

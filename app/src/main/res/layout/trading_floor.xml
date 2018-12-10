@@ -11,6 +11,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         style="@style/title_text" />
+
     <elosoft.coinz.Components.TextEmitter
         android:id="@+id/trading_floor_welcome_message"
         app:layout_constraintTop_toBottomOf="@id/trading_floor_title"
@@ -33,4 +34,19 @@
         android:text="make a trade"
         android:textColor="@color/colorPrimary"
         android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/trading_floor_pending_button"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toTopOf="@id/trading_floor_trade_button"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/button_background"
+        android:fontFamily="@font/eight_bit_body"
+        android:text="view pending trades"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18sp" />
+
 </android.support.constraint.ConstraintLayout>

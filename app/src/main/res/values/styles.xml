@@ -12,6 +12,7 @@
     </style>
 
     <style name="key_text">
+        <item name="android:background">@drawable/white_border</item>
         <item name="android:textSize">15dp</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>

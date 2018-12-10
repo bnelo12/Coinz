@@ -68,7 +68,7 @@ public class MapScreenView extends Fragment implements LocationEngineListener {
                     .getTaskResult(task);
             coinz = deserializeCoinzFromFireStore(coinzData);
             addCoinzToMap(mapboxMap, coinz, getContext());
-            mapMessage.setVisibility(View.INVISIBLE);
+            mapMessage.setVisibility(View.GONE);
             mapView.setVisibility(View.VISIBLE);
             mapboxMap.getLocationComponent().getLocationEngine().addLocationEngineListener(this);
         });
@@ -148,6 +148,7 @@ public class MapScreenView extends Fragment implements LocationEngineListener {
 
     private void slideCollectButtonDown(Button collecetCoinzButton) {
         if (buttonVisble) {
+            collecetCoinzButton.setVisibility(View.GONE);
             Animation slide_down = AnimationUtils.loadAnimation(getContext(),
                     R.anim.slide_down);
             collecetCoinzButton.startAnimation(slide_down);

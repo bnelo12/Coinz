@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import elosoft.coinz.Activities.CollectCoinzActivity;
+import elosoft.coinz.Activities.PendingTradeActivity;
 import elosoft.coinz.Activities.TradeActivity;
 import elosoft.coinz.Components.TextEmitter;
 import elosoft.coinz.R;
@@ -30,6 +31,14 @@ public class TradingFloorView extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent transitionIntent = new Intent(getActivity(), TradeActivity.class);
+                startActivity(transitionIntent);
+            }
+        });
+        Button viewPendingButton = view.findViewById(R.id.trading_floor_pending_button);
+        viewPendingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent transitionIntent = new Intent(getActivity(), PendingTradeActivity.class);
                 startActivity(transitionIntent);
             }
         });

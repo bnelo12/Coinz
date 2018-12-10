@@ -27,6 +27,7 @@ import elosoft.coinz.Components.EightBitRetroKeyBoard;
 import elosoft.coinz.Components.TextEmitter;
 import elosoft.coinz.Models.Coin;
 import elosoft.coinz.Models.DrawableCoin;
+import elosoft.coinz.Models.ExchangeRate;
 import elosoft.coinz.Models.Trade;
 import elosoft.coinz.R;
 import elosoft.coinz.Utility.LocalStorage.LocalStorageAPI;
@@ -211,7 +212,9 @@ public class TradeActivity extends FragmentActivity {
     private View.OnClickListener onConfirmPressListener = v -> {
         HashMap<String, Coin> userSelectedCoinz = getSelectedCoin(userDrawableCoinz);
         HashMap<String, Coin> partnerSelectedCoinz = getSelectedCoin(partnerDrawableCoinz);
-        Trade trade = new Trade(userSelectedCoinz, partnerSelectedCoinz, user, partnerUserName);
+        ExchangeRate exchangeRate = LocalStorageAPI.readExchangeRate(getApplicationContext());
+        Trade trade = new Trade(userSelectedCoinz, partnerSelectedCoinz, user, partnerUserName,
+                "pending", exchangeRate);
         FireStoreAPI.getInstance().addTrade(trade);
         UserUtility.removeUserCoinz(getApplicationContext(),
                 new ArrayList<>(userSelectedCoinz.values()));

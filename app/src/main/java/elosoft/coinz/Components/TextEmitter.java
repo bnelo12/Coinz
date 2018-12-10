@@ -28,7 +28,6 @@ public class TextEmitter extends View {
     private String currentUserInput = "";
     private Bitmap pointerBM;
     private Paint textPaint = new Paint();
-    private EightBitRetroKeyBoard eightBitRetroKeyBoard;
     private int viewWidth = 0;
     private int maxLines = 0;
     public boolean showCursor = true;
@@ -102,57 +101,51 @@ public class TextEmitter extends View {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
                 viewWidth = right - left;
-                maxLines = (int)(bottom-top-20)/60;
+                maxLines = (bottom-top-20)/60;
                 if (viewWidth <= 0) return;
                 viewInitialized = true;
                 textBlocks = preProcessText(displayText, currentLine);
                 TextEmitter.this.removeOnLayoutChangeListener(this);
             }
          });
-
-         this.setOnClickListener(v -> {
-             if (paused && !userInputMode) {
-                 continueEmit();
-             }
-         });
     }
 
     private ArrayList<String> preProcessText(String text, int currentLine) {
         if (textBlocks == null) {
-            textBlocks = new ArrayList<String>();
+            textBlocks = new ArrayList<>();
         }
         textBlocks.add("");
         String[] splitString = text.split("\\s+");
         int runningLineLengthCount = 0;
-        for (int i = 0; i < splitString.length; i++) {
-            if (splitString[i].equals("%n")) {
+        for (String aSplitString : splitString) {
+            if (aSplitString.equals("%n")) {
                 runningLineLengthCount = 0;
                 currentLine += 1;
                 textBlocks.add("");
                 continue;
             }
-            if (splitString[i].equals("%p")) {
+            if (aSplitString.equals("%p")) {
                 runningLineLengthCount = 0;
                 currentLine += 2;
                 textBlocks.add("%p");
                 textBlocks.add("");
                 continue;
             }
-            if (splitString[i].equals("%i")) {
+            if (aSplitString.equals("%i")) {
                 runningLineLengthCount = 0;
                 currentLine += 2;
                 textBlocks.add("%i");
                 textBlocks.add("");
                 continue;
             }
-            int wordLength = (int) textPaint.measureText(splitString[i] + " ");
+            int wordLength = (int) textPaint.measureText(aSplitString + " ");
             if (runningLineLengthCount + wordLength > viewWidth - 96) {
                 runningLineLengthCount = 0;
                 currentLine += 1;
                 textBlocks.add("");
             }
             runningLineLengthCount += wordLength;
-            textBlocks.set(currentLine, textBlocks.get(currentLine).concat(splitString[i] + " "));
+            textBlocks.set(currentLine, textBlocks.get(currentLine).concat(aSplitString + " "));
         }
         return textBlocks;
     }
@@ -209,17 +202,7 @@ public class TextEmitter extends View {
     }
 
     public void addEightBitKeyBoard(EightBitRetroKeyBoard keyboard) {
-        this.eightBitRetroKeyBoard = keyboard;
         keyboard.addTextEmitter(this);
-    }
-
-    public void addUserInputAndContinue() {
-        userInputMode = false;
-        textBlocks.set(currentLine, textBlocks.get(currentLine).concat(this.currentUserInput));
-        userInputList.add(currentUserInput);
-        currentUserInput = "";
-        currentLine++;
-        continueEmit();
     }
 
     public String popUserInput() {
@@ -247,5 +230,4 @@ public class TextEmitter extends View {
             canvas.drawBitmap(pointerBM, 32, 20 + 60 * currentLine, textPaint);
         }
     }
-
 }

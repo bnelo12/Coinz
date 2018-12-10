@@ -7,13 +7,18 @@ public class Trade {
     private final HashMap<String, Coin> partnerTradeCoinz;
     private final String user;
     private final String partner;
+    private final ExchangeRate exchangeRate;
+
+    private String status;
 
     public Trade(HashMap<String, Coin> userTradeCoinz, HashMap<String, Coin> partnerTradeCoinz,
-          String user, String partner) {
+          String user, String partner, String status, ExchangeRate exchangeRate) {
         this.userTradeCoinz = userTradeCoinz;
         this.partnerTradeCoinz = partnerTradeCoinz;
         this.user = user;
         this.partner = partner;
+        this.status = status;
+        this.exchangeRate = exchangeRate;
     }
 
     public HashMap<String, Coin> getUserTradeCoinz() {
@@ -30,5 +35,17 @@ public class Trade {
 
     public String getPartner() {
         return partner;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public ExchangeRate getExchangeRate() {
+        return exchangeRate;
     }
 }

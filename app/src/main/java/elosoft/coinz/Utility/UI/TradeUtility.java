@@ -39,13 +39,18 @@ public class TradeUtility {
     }
 
     public static void slideKeyboardUp(Context appContext, EightBitRetroKeyBoard keyboard) {
-        keyboard.setVisibility(View.VISIBLE);
-        Animation slide_up = AnimationUtils.loadAnimation(appContext, R.anim.slide_up);
-        keyboard.startAnimation(slide_up);
+        if (keyboard.getVisibility() != View.VISIBLE) {
+            keyboard.setVisibility(View.VISIBLE);
+            Animation slide_up = AnimationUtils.loadAnimation(appContext, R.anim.slide_up);
+            keyboard.startAnimation(slide_up);
+        }
     }
 
     public static void slideKeyboardDown(Context appContext, EightBitRetroKeyBoard keyboard) {
-        Animation slide_down = AnimationUtils.loadAnimation(appContext, R.anim.slide_down);
-        keyboard.startAnimation(slide_down);
+        if (keyboard.getVisibility() != View.GONE) {
+            keyboard.setVisibility(View.GONE);
+            Animation slide_down = AnimationUtils.loadAnimation(appContext, R.anim.slide_down);
+            keyboard.startAnimation(slide_down);
+        }
     }
 }

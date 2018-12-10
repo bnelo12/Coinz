@@ -9,6 +9,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -74,14 +75,29 @@ public class FireStoreAPI {
 
     public void getUserData(
             String userName, OnCompleteListener<DocumentSnapshot> onCompleteListener) {
+        db.collection("users_data")
+                .document(userName)
+                .get()
+                .addOnCompleteListener(onCompleteListener);
+    }
+
+    public void getUser(
+            String userName, OnCompleteListener<DocumentSnapshot> onCompleteListener) {
         db.collection("users")
                 .document(userName)
                 .get()
                 .addOnCompleteListener(onCompleteListener);
     }
 
-    public void setUserData(String userName, UserCoinzData userCoinzData) {
+    public void setUser(String userName, String password) {
         CollectionReference c = db.collection("users");
+        HashMap<String, String> user = new HashMap<>(1);
+        user.put("password", password);
+        c.document(userName).set(user);
+    }
+
+    public void setUserData(String userName, UserCoinzData userCoinzData) {
+        CollectionReference c = db.collection("users_data");
         c.document(userName).set(serializeUserDataForFireStore(userCoinzData));
     }
 
@@ -99,6 +115,20 @@ public class FireStoreAPI {
         updates.put(tradeId, serializeTradeForFirestore(trade));
         docRefPending.update(updates);
         docRefSent.update(updates);
+    }
+
+    public void getPendingUserTrades(String user, OnCompleteListener onCompleteListener) {
+        db.collection("sent_trades")
+                .document(user)
+                .get()
+                .addOnCompleteListener(onCompleteListener);
+    }
+
+    public void getReceivedUserTrades(String user, OnCompleteListener onCompleteListener) {
+        db.collection("pending_trades")
+                .document(user)
+                .get()
+                .addOnCompleteListener(onCompleteListener);
     }
 
     public void initTrades(String user) {

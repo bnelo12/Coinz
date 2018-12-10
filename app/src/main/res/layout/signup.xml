@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_margin="20dp"
         android:layout_height="match_parent"
-        app:displayText="@string/intro_text"
+        app:displayText=""
         app:displayRate="50" />
     <elosoft.coinz.Components.EightBitRetroKeyBoard
         android:id="@+id/keyboard"
