@@ -150,7 +150,6 @@ public class LocalStorageAPI {
         Runnable runnable = () -> {
             editor.commit();
             syncLocalUserDataWithFireStore(appContext);
-
         };
         Thread thread = new Thread(runnable);
         thread.start();

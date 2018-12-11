@@ -8,11 +8,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.HashMap;
 
-import elosoft.coinz.Models.Coin;
 import elosoft.coinz.R;
 
 public class HighScoreListAdapter extends BaseAdapter {    private final Context appContext;
@@ -43,7 +40,7 @@ public class HighScoreListAdapter extends BaseAdapter {    private final Context
         final HashMap<String, Object> score = (HashMap<String, Object>)scores.get(String.format("%d", position+1));
         Log.d("Report:", score.toString());
         final String user = (String)score.get("user");
-        final Long num = (Long)score.get("score");
+        final Double num = Double.parseDouble((String)score.get("score"));
 
         if (convertView == null) {
             final LayoutInflater layoutInflater = LayoutInflater.from(appContext);
@@ -56,7 +53,7 @@ public class HighScoreListAdapter extends BaseAdapter {    private final Context
 
         positionText.setText(String.format("%d.", position+1));
         userNameText.setText(user);
-        scoreText.setText(num.toString() + " GOLD");
+        scoreText.setText(String.format("%.2f", num));
 
         return convertView;
     }

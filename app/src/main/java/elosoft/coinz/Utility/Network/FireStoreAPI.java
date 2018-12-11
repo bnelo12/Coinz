@@ -191,4 +191,14 @@ public class FireStoreAPI {
                 .addOnCompleteListener(onCompleteListener);
     }
 
+    public void setHighScore(int position, String user, double num) {
+        DocumentReference docRefSent = db.collection("high_scores").document("scores");
+        HashMap<String, Object> score = new HashMap<>();
+        score.put("user", user);
+        score.put("score", Double.toString(num));
+        Map<String, Object> updates = new HashMap<>();
+        updates.put(Integer.toString(position), score);
+        docRefSent.update(updates);
+    }
+
 }
