@@ -19,6 +19,7 @@ import java.util.Map;
 
 import elosoft.coinz.Components.CoinzViewAdapter;
 import elosoft.coinz.Components.TradesViewAdapter;
+import elosoft.coinz.Components.TradesViewAdapterPending;
 import elosoft.coinz.Models.Trade;
 import elosoft.coinz.R;
 import elosoft.coinz.Utility.LocalStorage.LocalStorageAPI;
@@ -44,7 +45,7 @@ public class PendingTradeActivity extends FragmentActivity {
                 ListView listView = layout.findViewById(R.id.trades_list);
                 TradesViewAdapter tradesViewAdapter = new TradesViewAdapter(
                         PendingTradeActivity.this, pendingTrades, "deposit gold",
-                        "accepted");
+                        "approved");
                 listView.setAdapter(tradesViewAdapter);
             }
         });
@@ -55,9 +56,8 @@ public class PendingTradeActivity extends FragmentActivity {
                 ArrayList<Trade> pendingTrades = deserializeTradesFromFirestore(result);
                 ConstraintLayout layout = findViewById(R.id.fragment_received_trades);
                 ListView listView = layout.findViewById(R.id.trades_list);
-                TradesViewAdapter tradesViewAdapter = new TradesViewAdapter(
-                        PendingTradeActivity.this, pendingTrades, "approve",
-                        "pending");
+                TradesViewAdapterPending tradesViewAdapter = new TradesViewAdapterPending(
+                        PendingTradeActivity.this, pendingTrades);
                 listView.setAdapter(tradesViewAdapter);
             }
         });

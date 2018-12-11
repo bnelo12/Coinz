@@ -21,6 +21,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 import elosoft.coinz.Components.CoinzViewAdapter;
 import elosoft.coinz.Components.EightBitRetroKeyBoard;
@@ -214,7 +215,7 @@ public class TradeActivity extends FragmentActivity {
         HashMap<String, Coin> partnerSelectedCoinz = getSelectedCoin(partnerDrawableCoinz);
         ExchangeRate exchangeRate = LocalStorageAPI.readExchangeRate(getApplicationContext());
         Trade trade = new Trade(userSelectedCoinz, partnerSelectedCoinz, user, partnerUserName,
-                "pending", exchangeRate);
+                "pending", exchangeRate, UUID.randomUUID().toString());
         FireStoreAPI.getInstance().addTrade(trade);
         UserUtility.removeUserCoinz(getApplicationContext(),
                 new ArrayList<>(userSelectedCoinz.values()));

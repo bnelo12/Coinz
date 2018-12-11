@@ -25,7 +25,7 @@ public class MainActivity extends Activity {
         TextEmitter te = this.findViewById(R.id.tap_to_begin_emitter);
         te.emitText();
 
-        final Intent transitonIntent = new Intent(this, LoginSignupActivity.class);
+        final Intent transitonIntent = new Intent(this, LoginSignUpActivity.class);
         final View tapToContinueBoundingBox = findViewById(R.id.tap_to_view_bounding_box);
 
         tapToContinueBoundingBox.setOnClickListener(new View.OnClickListener() {

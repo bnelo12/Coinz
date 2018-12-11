@@ -10,11 +10,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
-
-import java.security.MessageDigest;
 import java.util.HashMap;
 
 import elosoft.coinz.Components.EightBitRetroKeyBoard;
@@ -33,7 +28,7 @@ import static elosoft.coinz.Utility.Serialize.DesrializeUserData.deserializeUser
 import static elosoft.coinz.Utility.UI.TradeUtility.slideKeyboardDown;
 import static elosoft.coinz.Utility.UI.TradeUtility.slideKeyboardUp;
 
-public class LoginSignupActivity extends Activity {
+public class LoginSignUpActivity extends Activity {
     private TextEmitter emitter;
     private EightBitRetroKeyBoard keyboard;
 
@@ -64,9 +59,7 @@ public class LoginSignupActivity extends Activity {
             };
         } else {
             emitter.appendText(" %n Logging in . . .");
-            emitter.onComplete = () -> {
-                loginUser(currentUser);
-            };
+            emitter.onComplete = () -> loginUser(currentUser);
         }
     }
 
@@ -81,7 +74,7 @@ public class LoginSignupActivity extends Activity {
                         UserUtility.createNewUser(getApplicationContext(), geoJSON, userName);
                         emitter.appendText(" %n %n Logging in . . .");
                         emitter.onComplete = () -> {
-                            final Intent transitonIntent = new Intent(LoginSignupActivity.this, CoinzNavigationActivity.class);
+                            final Intent transitonIntent = new Intent(LoginSignUpActivity.this, CoinzNavigationActivity.class);
                             startActivity(transitonIntent);
                         };
                     }
@@ -96,21 +89,15 @@ public class LoginSignupActivity extends Activity {
         Button signUpButton = findViewById(R.id.sign_up_button);
         Button loginButton = findViewById(R.id.login_button);
 
-        signUpButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                slideButtonLayoutDown();
-                inputStage = 200;
-                emitQuery();
-            }
+        signUpButton.setOnClickListener(v -> {
+            slideButtonLayoutDown();
+            inputStage = 200;
+            emitQuery();
         });
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                slideButtonLayoutDown();
-                inputStage = 100;
-                emitQuery();
-            }
+        loginButton.setOnClickListener(v -> {
+            slideButtonLayoutDown();
+            inputStage = 100;
+            emitQuery();
         });
     }
 
@@ -184,7 +171,7 @@ public class LoginSignupActivity extends Activity {
                             emitter.appendText("User not found!");
                             inputStage = 100;
                             emitQuery();
-                        } else if (!password.equals((String)taskResult.get("password"))) {
+                        } else if (!password.equals(taskResult.get("password"))) {
                             emitter.appendText("Invalid password!");
                             inputStage = 100;
                             emitQuery();
@@ -224,7 +211,7 @@ public class LoginSignupActivity extends Activity {
                                 LocalStorageAPI.storeExchangeRate(getApplicationContext(), exchangeRate);
                                 LocalStorageAPI.storeLoggedInUserName(getApplicationContext(), userName);
 
-                                final Intent transitionIntent = new Intent(LoginSignupActivity.this, CoinzNavigationActivity.class);
+                                final Intent transitionIntent = new Intent(LoginSignUpActivity.this, CoinzNavigationActivity.class);
                                 startActivity(transitionIntent);
                             }
                             catch (DeserializeCoin.CoinzGeoJSONParseError e) {

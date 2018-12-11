@@ -110,10 +110,28 @@ public class FireStoreAPI {
         DocumentReference docRefPending = db.collection("pending_trades").document(trade.getPartner());
         DocumentReference docRefSent = db.collection("sent_trades").document(trade.getUser());
 
-        String tradeId = UUID.randomUUID().toString();
+        String tradeId = trade.getId();
         Map<String, Object> updates = new HashMap<>();
         updates.put(tradeId, serializeTradeForFirestore(trade));
         docRefPending.update(updates);
+        docRefSent.update(updates);
+    }
+
+    public void removePendingTrade(Trade trade) {
+        DocumentReference docRefPending = db.collection("pending_trades").document(trade.getPartner());
+
+        String tradeId = trade.getId();
+        Map<String, Object> updates = new HashMap<>();
+        updates.put(tradeId, FieldValue.delete());
+        docRefPending.update(updates);
+    }
+
+    public void removeSentTrade(Trade trade) {
+        DocumentReference docRefSent = db.collection("sent_trades").document(trade.getPartner());
+
+        String tradeId = trade.getId();
+        Map<String, Object> updates = new HashMap<>();
+        updates.put(tradeId, FieldValue.delete());
         docRefSent.update(updates);
     }
 

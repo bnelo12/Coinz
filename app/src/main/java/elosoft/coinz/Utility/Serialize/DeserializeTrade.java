@@ -18,7 +18,8 @@ public class DeserializeTrade {
                 (String)serialTrade.get("user"),
                 (String)serialTrade.get("partner"),
                 (String)serialTrade.get("status"),
-                deserializeExchangeRateFromFirestore((Map<String, Object>)serialTrade.get("exchange_rate"))
+                deserializeExchangeRateFromFirestore((Map<String, Object>)serialTrade.get("exchange_rate")),
+                (String)serialTrade.get("id")
         );
     }
 

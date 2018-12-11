@@ -19,7 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.LoginSignupActivity"/>
+        <activity android:name=".Activities.LoginSignUpActivity"/>
         <activity android:name=".Activities.ViewCollectedCoinzActivity"/>
         <activity android:name=".Activities.CollectCoinzActivity"/>
         <activity android:name=".Activities.IntroductionActivity"/>
