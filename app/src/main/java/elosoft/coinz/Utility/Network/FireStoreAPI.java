@@ -127,7 +127,7 @@ public class FireStoreAPI {
     }
 
     public void removeSentTrade(Trade trade) {
-        DocumentReference docRefSent = db.collection("sent_trades").document(trade.getPartner());
+        DocumentReference docRefSent = db.collection("sent_trades").document(trade.getUser());
 
         String tradeId = trade.getId();
         Map<String, Object> updates = new HashMap<>();
