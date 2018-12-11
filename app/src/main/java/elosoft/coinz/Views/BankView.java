@@ -4,22 +4,31 @@ import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+
+import java.util.HashMap;
+
 import elosoft.coinz.Activities.DepositCoinzActivity;
-import elosoft.coinz.Activities.ViewCollectedCoinzActivity;
+import elosoft.coinz.Activities.PendingTradeActivity;
+import elosoft.coinz.Components.HighScoreListAdapter;
 import elosoft.coinz.Components.TextEmitter;
 import elosoft.coinz.Models.ExchangeRate;
 import elosoft.coinz.Models.UserCoinzData;
 import elosoft.coinz.R;
 import elosoft.coinz.Utility.LocalStorage.LocalStorageAPI;
+import elosoft.coinz.Utility.Network.FireStoreAPI;
 
 public class BankView extends Fragment {
 
@@ -52,6 +61,17 @@ public class BankView extends Fragment {
                 Intent transitionIntent = new Intent(getActivity(), DepositCoinzActivity.class);
                 ActivityOptions activityOptions = ActivityOptions.makeSceneTransitionAnimation(getActivity());
                 startActivity(transitionIntent, activityOptions.toBundle());
+            }
+        });
+
+        FireStoreAPI.getInstance().getHighScores(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                HashMap<String, Object> scores = (HashMap<String, Object>)FireStoreAPI.getTaskResult(task);
+                ListView listView = getView().findViewById(R.id.high_score_list);
+                HighScoreListAdapter highScoreListAdapter = new HighScoreListAdapter(
+                        getContext(), scores);
+                listView.setAdapter(highScoreListAdapter);
             }
         });
     }

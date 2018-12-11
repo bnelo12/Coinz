@@ -39,6 +39,26 @@
         android:text="0.00000 GOLD"
         style="@style/text_body"/>
 
+    <TextView
+        android:id="@+id/high_score_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/bank_gold_coin_amount"
+        app:layout_constraintLeft_toLeftOf="@id/bank_gold_coin_amount"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:gravity="left"
+        android:text="HIGH SCORES"
+        style="@style/text_body"/>
+
+    <ListView
+        android:listSelector="@android:color/transparent"
+        android:id="@+id/high_score_list"
+        android:divider="@null"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        app:layout_constraintTop_toBottomOf="@id/high_score_label"/>
+
     <Button
         android:id="@+id/bank_deposit_button"
         android:layout_marginLeft="40dp"

@@ -9,11 +9,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import elosoft.coinz.Models.Coin;
 import elosoft.coinz.Models.Trade;
@@ -26,23 +24,11 @@ import static elosoft.coinz.Utility.Serialize.SerializeUserData.serializeUserDat
 
 public class FireStoreAPI {
     private static volatile FireStoreAPI instance;
-    private static Object mutex = new Object();
+    private static final Object mutex = new Object();
     private FirebaseFirestore db;
 
     private FireStoreAPI() {
         db = FirebaseFirestore.getInstance();
-    }
-
-    public static class NoDocumentFound extends Exception {
-        private String errorMessage;
-
-        NoDocumentFound(String errorMessage) {
-            this.errorMessage = errorMessage;
-        }
-
-        public String getErrorMessage() {
-            return this.errorMessage;
-        }
     }
 
     public static FireStoreAPI getInstance() {
@@ -179,9 +165,7 @@ public class FireStoreAPI {
         docRef.update(updates);
     }
 
-    public void removeUserCollectableCoinz(
-            String user, Collection<Coin> coinz,
-            OnCompleteListener<DocumentSnapshot> onCompleteListener) {
+    public void removeUserCollectibleCoinz(String user, Collection<Coin> coinz) {
         DocumentReference docRef = db.collection("collectable_coinz").document(user);
         Map<String,Object> updates = new HashMap<>();
         for(Coin coin : coinz) {
@@ -199,4 +183,12 @@ public class FireStoreAPI {
         }
         docRef.update(updates);
     }
+
+    public void getHighScores(OnCompleteListener<DocumentSnapshot> onCompleteListener) {
+        db.collection("high_scores")
+                .document("scores")
+                .get()
+                .addOnCompleteListener(onCompleteListener);
+    }
+
 }

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp">
+        <TextView
+            android:id="@+id/position"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="1."
+            style="@style/text_body"/>
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="xxgoldcollecterxx"
+            style="@style/text_body"/>
+        <TextView
+            android:id="@+id/score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="viewEnd"
+            android:text="5000"
+            style="@style/text_body"/>
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
