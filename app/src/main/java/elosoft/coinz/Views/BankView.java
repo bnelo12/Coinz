@@ -51,8 +51,7 @@ public class BankView extends Fragment {
         goldAmount = view.findViewById(R.id.bank_gold_coin_amount);
         Context appContext = getContext().getApplicationContext();
         ExchangeRate exchangeRate = LocalStorageAPI.readExchangeRate(appContext);
-        userCoinzData = LocalStorageAPI.readUserCoinzData(
-                getContext().getApplicationContext(), exchangeRate);
+        userCoinzData = LocalStorageAPI.readUserCoinzData(getContext().getApplicationContext());
 
         Button depositButton = view.findViewById(R.id.bank_deposit_button);
         depositButton.setOnClickListener(new View.OnClickListener() {
@@ -68,10 +67,12 @@ public class BankView extends Fragment {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 HashMap<String, Object> scores = (HashMap<String, Object>)FireStoreAPI.getTaskResult(task);
-                ListView listView = getView().findViewById(R.id.high_score_list);
-                HighScoreListAdapter highScoreListAdapter = new HighScoreListAdapter(
-                        getContext(), scores);
-                listView.setAdapter(highScoreListAdapter);
+                if (view != null) {
+                    ListView listView = view.findViewById(R.id.high_score_list);
+                    HighScoreListAdapter highScoreListAdapter = new HighScoreListAdapter(
+                            getContext(), scores);
+                    listView.setAdapter(highScoreListAdapter);
+                }
             }
         });
     }
@@ -82,7 +83,7 @@ public class BankView extends Fragment {
         Context appContext = getContext().getApplicationContext();
         TextView goldAmount = getView().findViewById(R.id.bank_gold_coin_amount);
         ExchangeRate exchangeRate = LocalStorageAPI.readExchangeRate(appContext);
-        userCoinzData = LocalStorageAPI.readUserCoinzData(appContext, exchangeRate);
+        userCoinzData = LocalStorageAPI.readUserCoinzData(appContext);
         Log.d("BankView", "[onResume] Updating Gold Amount");
         if (goldAmount != null && userCoinzData != null) {
             goldAmount.setText(String.format("%.5f GOLD", userCoinzData.getNumGOLD()));

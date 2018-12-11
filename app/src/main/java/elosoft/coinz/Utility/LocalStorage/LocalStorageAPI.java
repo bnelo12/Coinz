@@ -4,9 +4,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 
 import elosoft.coinz.Models.Coin;
@@ -60,78 +64,31 @@ public class LocalStorageAPI {
         SharedPreferences sharedPref = PreferenceManager
                 .getDefaultSharedPreferences(appContext);
         Editor editor = sharedPref.edit();
-        editor.putFloat("USER_NUM_QUID", (float)userCoinzData.getNumQUID());
-        editor.putFloat("USER_NUM_PENY", (float)userCoinzData.getNumPENY());
-        editor.putFloat("USER_NUM_DOLR", (float)userCoinzData.getNumDOLR());
-        editor.putFloat("USER_NUM_SHIL", (float)userCoinzData.getNumSHIL());
+        String date = DateFormat.getInstance().format(userCoinzData.getDateLastUpdated());
+        editor.putString("USER_DATE_LAST_UPDATED", date);
         editor.putFloat("USER_NUM_GOLD", (float)userCoinzData.getNumGOLD());
         asyncCommit(editor, appContext);
     }
 
-
-    public static UserCoinzData readUserCoinzData(Context appContext, ExchangeRate exchangeRate) {
+    public static void updateLastUpdateDate(Context appContext, Date dateLastUpdated) {
         SharedPreferences sharedPref = PreferenceManager
                 .getDefaultSharedPreferences(appContext);
-        double numQUID = sharedPref.getFloat("USER_NUM_QUID", 0);
-        double numPENY = sharedPref.getFloat("USER_NUM_PENY", 0);
-        double numDOLR = sharedPref.getFloat("USER_NUM_DOLR", 0);
-        double numSHIL = sharedPref.getFloat("USER_NUM_SHIL", 0);
+        Editor editor = sharedPref.edit();
+        editor.putString("USER_DATE_LAST_UPDATED", dateLastUpdated.toString());
+        asyncCommit(editor, appContext);
+    }
+
+    public static UserCoinzData readUserCoinzData(Context appContext) {
+        SharedPreferences sharedPref = PreferenceManager
+                .getDefaultSharedPreferences(appContext);
         double numGOLD = sharedPref.getFloat("USER_NUM_GOLD", 0.0f);
-        return new UserCoinzData(numPENY,  numSHIL,  numDOLR, numQUID,  exchangeRate, numGOLD);
-    }
-
-    public static void updateUserCoinzData(Context appContext, Collection<Coin> coinzToAdd) {
-        SharedPreferences sharedPref = PreferenceManager
-                .getDefaultSharedPreferences(appContext);
-        double numQUID = sharedPref.getFloat("USER_NUM_QUID", 0);
-        double numPENY = sharedPref.getFloat("USER_NUM_PENY", 0);
-        double numDOLR = sharedPref.getFloat("USER_NUM_DOLR", 0);
-        double numSHIL = sharedPref.getFloat("USER_NUM_SHIL", 0);
-
-        for (Coin c : coinzToAdd) {
-            switch (c.type) {
-                case DOLR: numDOLR += (float)c.value; break;
-                case QUID: numQUID += (float)c.value; break;
-                case SHIL: numSHIL += (float)c.value; break;
-                case PENY: numPENY += (float)c.value; break;
-                default: break;
-            }
+        try {
+            Date dateLastUpdated = DateFormat.getInstance().parse(sharedPref.getString("USER_DATE_LAST_UPDATED", ""));
+            return new UserCoinzData(numGOLD, dateLastUpdated);
+        } catch (ParseException e) {
+            Log.e("LocalStorageAPI", "[readUserCoinzData] Unable to parse date");
+            return new UserCoinzData(numGOLD, new Date());
         }
-
-        Editor editor = sharedPref.edit();
-        editor.putFloat("USER_NUM_QUID", (float)numQUID);
-        editor.putFloat("USER_NUM_PENY", (float)numPENY);
-        editor.putFloat("USER_NUM_DOLR", (float)numDOLR);
-        editor.putFloat("USER_NUM_SHIL", (float)numSHIL);
-
-        asyncCommit(editor, appContext);
-    }
-
-    public static void removeUserCoinzData(Context appContext, Collection<Coin> coinzToAdd) {
-        SharedPreferences sharedPref = PreferenceManager
-                .getDefaultSharedPreferences(appContext);
-        double numQUID = sharedPref.getFloat("USER_NUM_QUID", 0);
-        double numPENY = sharedPref.getFloat("USER_NUM_PENY", 0);
-        double numDOLR = sharedPref.getFloat("USER_NUM_DOLR", 0);
-        double numSHIL = sharedPref.getFloat("USER_NUM_SHIL", 0);
-
-        for (Coin c : coinzToAdd) {
-            switch (c.type) {
-                case DOLR: numDOLR -= (float)c.value; break;
-                case QUID: numQUID -= (float)c.value; break;
-                case SHIL: numSHIL -= (float)c.value; break;
-                case PENY: numPENY -= (float)c.value; break;
-                default: break;
-            }
-        }
-
-        Editor editor = sharedPref.edit();
-        editor.putFloat("USER_NUM_QUID", (float)numQUID);
-        editor.putFloat("USER_NUM_PENY", (float)numPENY);
-        editor.putFloat("USER_NUM_DOLR", (float)numDOLR);
-        editor.putFloat("USER_NUM_SHIL", (float)numSHIL);
-
-        asyncCommit(editor, appContext);
     }
 
     public static void updateUserGOLD(Context appContext, double goldToAdd) {

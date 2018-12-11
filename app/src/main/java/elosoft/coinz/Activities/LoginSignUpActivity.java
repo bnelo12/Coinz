@@ -24,7 +24,7 @@ import elosoft.coinz.R;
 import elosoft.coinz.Utility.User.UserUtility;
 
 import static elosoft.coinz.Utility.Serialize.DeserializeExchangeRate.deserializeExchangeRateFromGeoJSON;
-import static elosoft.coinz.Utility.Serialize.DesrializeUserData.deserializeUserDataFromFireStore;
+import static elosoft.coinz.Utility.Serialize.DeserializeUserData.deserializeUserDataFromFireStore;
 import static elosoft.coinz.Utility.UI.TradeUtility.slideKeyboardDown;
 import static elosoft.coinz.Utility.UI.TradeUtility.slideKeyboardUp;
 
@@ -206,7 +206,7 @@ public class LoginSignUpActivity extends Activity {
                         geoJSON -> {
                             try {
                                 ExchangeRate exchangeRate = deserializeExchangeRateFromGeoJSON(geoJSON);
-                                UserCoinzData userCoinzData = deserializeUserDataFromFireStore(taskResult, exchangeRate);
+                                UserCoinzData userCoinzData = deserializeUserDataFromFireStore(taskResult);
                                 LocalStorageAPI.storeUserCoinzData(getApplicationContext(), userCoinzData);
                                 LocalStorageAPI.storeExchangeRate(getApplicationContext(), exchangeRate);
                                 LocalStorageAPI.storeLoggedInUserName(getApplicationContext(), userName);

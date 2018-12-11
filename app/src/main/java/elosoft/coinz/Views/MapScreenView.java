@@ -126,7 +126,6 @@ public class MapScreenView extends Fragment implements LocationEngineListener {
                 String currentUser = LocalStorageAPI.getLoggedInUserName(getActivity().getApplicationContext());
                 FireStoreAPI.getInstance().removeUserCollectibleCoinz(currentUser, closestCoinz.values());
                 FireStoreAPI.getInstance().addUserCollectedCoinz(currentUser, closestCoinz.values());
-                LocalStorageAPI.updateUserCoinzData(getContext().getApplicationContext(), closestCoinz.values());
                 Intent transitionIntent = new Intent(getActivity(), CollectCoinzActivity.class);
                 transitionIntent.putExtra("NUMBER_OF_COINZ", closestCoinz.size());
                 transitionIntent.putExtra("COINZ", serializeCoinz(closestCoinz));

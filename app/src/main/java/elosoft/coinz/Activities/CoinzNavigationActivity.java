@@ -8,10 +8,16 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.widget.ImageButton;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import elosoft.coinz.Models.UserCoinzData;
 import elosoft.coinz.R;
+import elosoft.coinz.Utility.LocalStorage.LocalStorageAPI;
+import elosoft.coinz.Utility.User.UserUtility;
 import elosoft.coinz.Views.BankView;
 import elosoft.coinz.Views.FortressView;
 import elosoft.coinz.Views.MapScreenView;
@@ -48,6 +54,13 @@ public class CoinzNavigationActivity extends FragmentActivity {
     }
 
     private void loadView(SubViewType subView) {
+        UserCoinzData userCoinzData = LocalStorageAPI.readUserCoinzData(getApplicationContext());
+        String userName = LocalStorageAPI.getLoggedInUserName(getApplicationContext());
+        Date currentDate = new Date();
+        DateFormat df = new SimpleDateFormat("yyyy-dd-MM");
+        if (!df.format(currentDate).equals(df.format(userCoinzData.getDateLastUpdated()))) {
+            UserUtility.updateToTodaysCoinz(getApplicationContext(), userCoinzData, userName);
+        }
         FragmentTransaction ft = fragmentManager.beginTransaction();
         if (currentFragmentType == subView) {
             Log.d("Fragment Manager", "Fragment already visible!");

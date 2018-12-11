@@ -75,9 +75,7 @@ public class DepositCoinzActivity extends FragmentActivity {
 
     private void depositSelectedCoinz(ArrayList<DrawableCoin> coinz) {
         ExchangeRate exchangeRate = LocalStorageAPI.readExchangeRate(getApplicationContext());
-        UserCoinzData userCoinzData = LocalStorageAPI.readUserCoinzData(
-          getApplicationContext(), exchangeRate
-        );
+        UserCoinzData userCoinzData = LocalStorageAPI.readUserCoinzData(getApplicationContext());
         ArrayList<Coin> collectedCoinz = new ArrayList<>();
         double goldToAdd = 0.0f;
         for (DrawableCoin coin : coinz) {

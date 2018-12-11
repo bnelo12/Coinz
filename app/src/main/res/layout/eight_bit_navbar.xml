@@ -9,21 +9,25 @@
     <ImageButton
         android:id="@+id/nav_bar_fortress"
         style="@style/nav_bar_icon"
+        android:layout_height="match_parent"
+        android:scaleType="center"
         android:src="@drawable/icon_fortress" />
     <ImageButton
         android:id="@+id/nav_bar_trading_floor"
+        android:layout_height="match_parent"
+        android:scaleType="center"
         android:src="@drawable/icon_gold_coin"
         style="@style/nav_bar_icon"/>
     <ImageButton
         android:id="@+id/nav_bar_bank"
+        android:layout_height="match_parent"
+        android:scaleType="center"
         android:src="@drawable/icon_bank"
         style="@style/nav_bar_icon"/>
     <ImageButton
         android:id="@+id/nav_bar_icon_map"
+        android:layout_height="match_parent"
+        android:scaleType="center"
         android:src="@drawable/icon_map"
-        style="@style/nav_bar_icon"/>
-    <ImageButton
-        android:id="@+id/nav_bar_icon_settings"
-        android:src="@drawable/icon_settings_wheel"
         style="@style/nav_bar_icon"/>
 </LinearLayout>

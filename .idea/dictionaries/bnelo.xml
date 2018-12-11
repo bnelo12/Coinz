@@ -2,9 +2,11 @@
   <dictionary name="bnelo">
     <words>
       <w>coinz</w>
+      <w>coinzmap</w>
       <w>dolr</w>
       <w>edalot</w>
       <w>firestore</w>
+      <w>geojson</w>
       <w>peny</w>
       <w>shil</w>
     </words>
