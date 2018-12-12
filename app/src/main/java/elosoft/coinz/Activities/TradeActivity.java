@@ -107,34 +107,28 @@ public class TradeActivity extends FragmentActivity {
     }
 
     private void commenceTrade() {
-        FireStoreAPI.getInstance().getUserCollectedCoinz(user, new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                HashMap<String, Object> taskResult = (HashMap<String, Object>)FireStoreAPI
-                        .getTaskResult(task);
-                HashMap<String, Coin> userCoinz = DeserializeCoin.deserializeCoinz(taskResult);
-                if (userCoinz.size() == 0) {
-                    handleNoCoinzToTrade();
-                } else {
-                    emitter.appendText("Who would you like to trade with? %n username: %i");
-                    ConstraintLayout otherCoinz = findViewById(R.id.fragment_user_coinz);
-                    GridView gridView = otherCoinz.findViewById(R.id.coinz_grid);
-                    ArrayList<DrawableCoin> drawableCoins = new ArrayList<>();
-                    for (Coin c : new ArrayList<Coin>(userCoinz.values())) {
-                        drawableCoins.add(new DrawableCoin(c, false));
-                    }
-                    userDrawableCoinz = drawableCoins;
-                    CoinzViewAdapter coinzAdapter = new CoinzViewAdapter(TradeActivity.this, drawableCoins);
-                    gridView.setAdapter(coinzAdapter);
-                    gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            drawableCoins.get(position).toggleSelected();
-                            coinzAdapter.notifyDataSetChanged();
-                            updateTradeConfirmButton();
-                        }
-                    });
+        FireStoreAPI.getInstance().getUserCollectedCoinz(user, task -> {
+            HashMap<String, Object> taskResult = (HashMap<String, Object>)FireStoreAPI
+                    .getTaskResult(task);
+            HashMap<String, Coin> userCoinz = DeserializeCoin.deserializeCoinz(taskResult);
+            if (userCoinz.size() == 0) {
+                handleNoCoinzToTrade();
+            } else {
+                emitter.appendText("Who would you like to trade with? %n username: %i");
+                ConstraintLayout otherCoinz = findViewById(R.id.fragment_user_coinz);
+                GridView gridView = otherCoinz.findViewById(R.id.coinz_grid);
+                ArrayList<DrawableCoin> drawableCoins = new ArrayList<>();
+                for (Coin c : new ArrayList<>(userCoinz.values())) {
+                    drawableCoins.add(new DrawableCoin(c, false));
                 }
+                userDrawableCoinz = drawableCoins;
+                CoinzViewAdapter coinzAdapter = new CoinzViewAdapter(TradeActivity.this, drawableCoins);
+                gridView.setAdapter(coinzAdapter);
+                gridView.setOnItemClickListener((parent, view, position, id) -> {
+                    drawableCoins.get(position).toggleSelected();
+                    coinzAdapter.notifyDataSetChanged();
+                    updateTradeConfirmButton();
+                });
             }
         });
     }
@@ -167,13 +161,10 @@ public class TradeActivity extends FragmentActivity {
                 CoinzViewAdapter coinzAdapter = new CoinzViewAdapter(TradeActivity.this, drawableCoins);
                 gridView.setAdapter(coinzAdapter);
                 partnerDrawableCoinz = drawableCoins;
-                gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        drawableCoins.get(position).toggleSelected();
-                        coinzAdapter.notifyDataSetChanged();
-                        updateTradeConfirmButton();
-                    }
+                gridView.setOnItemClickListener((parent, view, position, id) -> {
+                    drawableCoins.get(position).toggleSelected();
+                    coinzAdapter.notifyDataSetChanged();
+                    updateTradeConfirmButton();
                 });
                 slideFragmentLayoutUp();
                 emitter.appendText("Found user. Select the coinz you want to trade.");
@@ -195,6 +186,7 @@ public class TradeActivity extends FragmentActivity {
     private void slideTradeConfirmButtonDown() {
         Button tradeButton = findViewById(R.id.confirm_trade_button);
         if (!tradeButtonVisible) return;
+        tradeButton.setVisibility(View.GONE);
         Animation slide_down = AnimationUtils.loadAnimation(getApplicationContext(),
                 R.anim.slide_down);
         tradeButton.startAnimation(slide_down);
@@ -217,8 +209,8 @@ public class TradeActivity extends FragmentActivity {
         Trade trade = new Trade(userSelectedCoinz, partnerSelectedCoinz, user, partnerUserName,
                 "pending", exchangeRate, UUID.randomUUID().toString());
         FireStoreAPI.getInstance().addTrade(trade);
-        UserUtility.removeUserCoinz(getApplicationContext(),
-                new ArrayList<>(userSelectedCoinz.values()));
+        FireStoreAPI.getInstance().removeUserDepositedCoinz(trade.getUser(),  new ArrayList<>(userSelectedCoinz.values()));
+        FireStoreAPI.getInstance().removeUserDepositedCoinz(trade.getPartner(),  new ArrayList<>(partnerSelectedCoinz.values()));;
         finish();
     };
 }

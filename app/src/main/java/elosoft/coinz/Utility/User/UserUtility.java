@@ -9,8 +9,17 @@ import com.android.volley.VolleyError;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import elosoft.coinz.Models.Coin;
 import elosoft.coinz.Models.ExchangeRate;
@@ -30,7 +39,7 @@ public class UserUtility {
         FireStoreAPI fs = FireStoreAPI.getInstance();
         HashMap<String, Coin> collectibleCoinz = deserializeCoinzFromGeoJSON(geoJSON);
         HashMap<String, Coin> collectedCoins = new HashMap<>();
-        UserCoinzData userCoinzData = new UserCoinzData(0, new Date());
+        UserCoinzData userCoinzData = new UserCoinzData(0, new Date(), 0, 0);
         ExchangeRate coinExchangeRates = deserializeExchangeRateFromGeoJSON(geoJSON);
         LocalStorageAPI.storeUserCoinzData(appContext, userCoinzData);
         LocalStorageAPI.storeExchangeRate(appContext, coinExchangeRates);
@@ -40,29 +49,45 @@ public class UserUtility {
         fs.initTrades(userName);
     }
 
-    public static void removeUserCoinz(Context appContext, ArrayList<Coin> userCoinz) {
-        String currentUser = LocalStorageAPI.getLoggedInUserName(appContext);
-        FireStoreAPI.getInstance().removeUserDepositedCoinz(currentUser, userCoinz);
+    private static class Score {
+        public String user;
+        public Double score;
+        Score(String user, Double score) {
+            this.user = user;
+            this.score = score;
+        }
     }
 
     public static void updateHighScores(UserCoinzData userCoinzData, String user) {
-        double goldAmount = userCoinzData.getNumGOLD();
         FireStoreAPI.getInstance().getHighScores(task -> {
-            HashMap<String, Object> scores = (HashMap<String, Object>)FireStoreAPI.getTaskResult(task);
-            for (int i = 1; i <= scores.size(); i++) {
-                HashMap<String, Object> score = (HashMap<String, Object>)scores.get(String.format("%d", i));
-                Double num = Double.parseDouble((String)score.get("score"));
-                String otherUser = (String)score.get("user");
-                if (goldAmount >= num) {
-                    FireStoreAPI.getInstance().setHighScore(i, user, goldAmount);
-                    for (int j = i; j > 1; j--) {
-                        score = (HashMap<String, Object>)scores.get(Integer.toString(j));
-                        otherUser = (String)score.get("user");
-                        num = Double.parseDouble((String)score.get("score"));
-                        FireStoreAPI.getInstance().setHighScore(j-1, otherUser, num);
-                    }
+            HashMap<String, Object> scores = (HashMap<String, Object>) FireStoreAPI.getTaskResult(task);
+            ArrayList<Score> userTable = new ArrayList<>();
+
+            boolean userContained = false;
+
+            for (String key : scores.keySet()) {
+                HashMap<String, String> score = (HashMap<String, String>) scores.get(key);
+                String parseUser = score.get("user");
+                double parseNum = Double.parseDouble(score.get("score"));
+                if (parseUser.equals(user) && userCoinzData.getNumGOLD() < parseNum) {
                     return;
+                } else if (parseUser.equals(user)) {
+                    parseNum = userCoinzData.getNumGOLD();
+                    userTable.add(new Score(parseUser, parseNum));
+                    userContained = true;
+                } else {
+                    userTable.add(new Score(parseUser, parseNum));
                 }
+            }
+
+            if (!userContained) {
+                userTable.add(new Score(user, userCoinzData.getNumGOLD()));
+            }
+
+            userTable.sort(Comparator.comparingDouble(o -> -o.score));
+            for (int i = 0; i < 3; i++) {
+                FireStoreAPI.getInstance().setHighScore(i+1,
+                        userTable.get(i).user, userTable.get(i).score);
             }
         });
     }
@@ -76,6 +101,10 @@ public class UserUtility {
                 LocalStorageAPI.storeExchangeRate(appContext, exchangeRate);
                 LocalStorageAPI.storeUserCoinzData(appContext, userCoinzData);
                 FireStoreAPI.getInstance().setUserCollectableCoinz(userName, collectibleCoinz);
+                userCoinzData.setCoinzCollectedToday(0);
+                userCoinzData.setCoinzDepositedToday(0);
+                userCoinzData.setDateLastUpdated(new Date());
+                LocalStorageAPI.storeUserCoinzData(appContext, userCoinzData);
             } catch (DeserializeCoin.CoinzGeoJSONParseError coinzGeoJSONParseError) {
                 Log.e("UserUtility", "Unable to parse coinz");
             }
@@ -88,8 +117,10 @@ public class UserUtility {
 
     public static void syncLocalUserDataWithFireStore(Context appContext) {
         UserCoinzData userCoinzData = LocalStorageAPI.readUserCoinzData(appContext);
-        String currentUser = LocalStorageAPI.getLoggedInUserName(appContext);
-        updateHighScores(userCoinzData, currentUser);
-        FireStoreAPI.getInstance().setUserData(currentUser, userCoinzData);
+        if (userCoinzData != null) {
+            String currentUser = LocalStorageAPI.getLoggedInUserName(appContext);
+            updateHighScores(userCoinzData, currentUser);
+            FireStoreAPI.getInstance().setUserData(currentUser, userCoinzData);
+        }
     }
 }

@@ -1,9 +1,11 @@
 package elosoft.coinz.Utility.UI;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.support.v4.app.ActivityCompat;
 
 import com.mapbox.mapboxsdk.annotations.IconFactory;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
@@ -63,6 +65,13 @@ public class MapBoxUtility {
     public static boolean checkMapPermissions(Context appContext) {
         return appContext.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED;
+    }
+
+    public static void requestMapPermissions(Activity activity) {
+        ActivityCompat.requestPermissions(activity,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                1
+        );
     }
 
     public static  HashMap<String, Coin> findCoinzWithinDistance(

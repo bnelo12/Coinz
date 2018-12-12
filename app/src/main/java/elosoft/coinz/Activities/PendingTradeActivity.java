@@ -9,6 +9,7 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -18,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import elosoft.coinz.Components.CoinzViewAdapter;
+import elosoft.coinz.Components.TextEmitter;
 import elosoft.coinz.Components.TradesViewAdapter;
 import elosoft.coinz.Components.TradesViewAdapterPending;
 import elosoft.coinz.Models.Trade;
@@ -34,6 +36,8 @@ public class PendingTradeActivity extends FragmentActivity {
         setContentView(R.layout.activity_pending_trade);
         initExitButton();
 
+        TextEmitter te = findViewById(R.id.emitter);
+        te.emitText();
 
         String user = LocalStorageAPI.getLoggedInUserName(getApplicationContext());
         FireStoreAPI.getInstance().getPendingUserTrades(user, new OnCompleteListener() {

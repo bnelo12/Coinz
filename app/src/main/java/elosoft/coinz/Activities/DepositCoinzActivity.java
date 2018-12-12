@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageButton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +33,7 @@ public class DepositCoinzActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_deposit_coinz);
+        initExitButton();
         TextEmitter te = findViewById(R.id.d_coinz_emitter_coinz_emitter);
         te.emitText();
         String currentUser = LocalStorageAPI.getLoggedInUserName(getApplicationContext());
@@ -48,7 +50,7 @@ public class DepositCoinzActivity extends FragmentActivity {
                     DepositCoinzActivity.this, drawableCoins);
             gridView.setAdapter(coinzAdapter);
             if (coinz.size() == 0) {
-                te.appendText("My lord, you haven't collected any coinz yet. Visit the map to find the coin locations.");
+                te.appendText("My lord, you haven't collected any coinz yet. Visit the view_map to find the coin locations.");
             } else {
                 te.appendText("Sire, we can exchange our coinz for GOLD here! ");
                 emitExchangeRates(te);
@@ -76,7 +78,7 @@ public class DepositCoinzActivity extends FragmentActivity {
     private void depositSelectedCoinz(ArrayList<DrawableCoin> coinz) {
         ExchangeRate exchangeRate = LocalStorageAPI.readExchangeRate(getApplicationContext());
         UserCoinzData userCoinzData = LocalStorageAPI.readUserCoinzData(getApplicationContext());
-        ArrayList<Coin> collectedCoinz = new ArrayList<>();
+        ArrayList<Coin> selectedCoinz = new ArrayList<>();
         double goldToAdd = 0.0f;
         for (DrawableCoin coin : coinz) {
             if (coin.isSelected) {
@@ -97,21 +99,37 @@ public class DepositCoinzActivity extends FragmentActivity {
                     default:
                         break;
                 }
-                collectedCoinz.add(c);
+                selectedCoinz.add(c);
             }
         }
         Log.d("DepositCoinzActivity",
                 String.format("Adding %f GOLD to user account.", goldToAdd));
-        LocalStorageAPI.updateUserGOLD(getApplicationContext(), goldToAdd);
-        UserUtility.removeUserCoinz(getApplicationContext(), collectedCoinz);
+        if (userCoinzData.getCoinzDepositedToday() + selectedCoinz.size() <= 25) {
+            LocalStorageAPI.updateUserGOLD(getApplicationContext(), goldToAdd);
+            LocalStorageAPI.updateNumGoldDeposited(getApplicationContext(),
+                    userCoinzData.getCoinzDepositedToday() + selectedCoinz.size());
+            String userName = LocalStorageAPI.getLoggedInUserName(getApplicationContext());
+            FireStoreAPI.getInstance().removeUserDepositedCoinz(userName, selectedCoinz);
+        } else {
+            TextEmitter te = findViewById(R.id.d_coinz_emitter_coinz_emitter);
+            int numAbleToDeposit = 25 - (int)userCoinzData.getCoinzDepositedToday();
+            te.appendText(
+                    String.format("Sorry bank rules. You can only deposit deposit %d more coinz today.",
+                            numAbleToDeposit));
+        }
     }
 
     private void emitExchangeRates(TextEmitter emitter) {
         ExchangeRate exchangeRate = LocalStorageAPI.readExchangeRate(getApplicationContext());
         emitter.appendText(" %n Today's exchange rates are . . . ");
-        emitter.appendText(String.format(" %%n 1 PENY -> %.2f GOLD", exchangeRate.ExchangeRatePENY));
-        emitter.appendText(String.format(" %%n 1 DOLR -> %.2f GOLD", exchangeRate.ExchangeRateDOLR));
-        emitter.appendText(String.format(" %%n 1 SHIL -> %.2f GOLD", exchangeRate.ExchangeRateSHIL));
-        emitter.appendText(String.format(" %%n 1 QUID -> %.2f GOLD", exchangeRate.ExchangeRateQUID));
+        emitter.appendText(String.format(" 1 PENY -> %.2f GOLD", exchangeRate.ExchangeRatePENY));
+        emitter.appendText(String.format(" 1 DOLR -> %.2f GOLD", exchangeRate.ExchangeRateDOLR));
+        emitter.appendText(String.format(" 1 SHIL -> %.2f GOLD", exchangeRate.ExchangeRateSHIL));
+        emitter.appendText(String.format(" 1 QUID -> %.2f GOLD", exchangeRate.ExchangeRateQUID));
+    }
+
+    private void initExitButton() {
+        ImageButton exitButton = findViewById(R.id.exit_button);
+        exitButton.setOnClickListener(v -> finish());
     }
 }

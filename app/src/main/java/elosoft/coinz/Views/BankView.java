@@ -21,7 +21,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.util.HashMap;
 
 import elosoft.coinz.Activities.DepositCoinzActivity;
-import elosoft.coinz.Activities.PendingTradeActivity;
 import elosoft.coinz.Components.HighScoreListAdapter;
 import elosoft.coinz.Components.TextEmitter;
 import elosoft.coinz.Models.ExchangeRate;
@@ -39,7 +38,7 @@ public class BankView extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.bank, container, false);
+        return inflater.inflate(R.layout.view_bank, container, false);
     }
 
     @Override

@@ -67,6 +67,8 @@ public class LocalStorageAPI {
         String date = DateFormat.getInstance().format(userCoinzData.getDateLastUpdated());
         editor.putString("USER_DATE_LAST_UPDATED", date);
         editor.putFloat("USER_NUM_GOLD", (float)userCoinzData.getNumGOLD());
+        editor.putFloat("USER_NUM_DEPOSITED", (float)userCoinzData.getCoinzDepositedToday());
+        editor.putFloat("USER_NUM_COLLECTED", (float)userCoinzData.getCoinzCollectedToday());
         asyncCommit(editor, appContext);
     }
 
@@ -74,7 +76,23 @@ public class LocalStorageAPI {
         SharedPreferences sharedPref = PreferenceManager
                 .getDefaultSharedPreferences(appContext);
         Editor editor = sharedPref.edit();
-        editor.putString("USER_DATE_LAST_UPDATED", dateLastUpdated.toString());
+        editor.putString("USER_DATE_LAST_UPDATED", DateFormat.getInstance().format(dateLastUpdated));
+        asyncCommit(editor, appContext);
+    }
+
+    public static void updateNumCoinzCollected(Context appContext, double coinzCollected) {
+        SharedPreferences sharedPref = PreferenceManager
+                .getDefaultSharedPreferences(appContext);
+        Editor editor = sharedPref.edit();
+        editor.putFloat("USER_NUM_COLLECTED",  (float)coinzCollected);
+        asyncCommit(editor, appContext);
+    }
+
+    public static void updateNumGoldDeposited(Context appContext, double numGoldDeposited) {
+        SharedPreferences sharedPref = PreferenceManager
+                .getDefaultSharedPreferences(appContext);
+        Editor editor = sharedPref.edit();
+        editor.putFloat("USER_NUM_DEPOSITED",  (float)numGoldDeposited);
         asyncCommit(editor, appContext);
     }
 
@@ -82,12 +100,14 @@ public class LocalStorageAPI {
         SharedPreferences sharedPref = PreferenceManager
                 .getDefaultSharedPreferences(appContext);
         double numGOLD = sharedPref.getFloat("USER_NUM_GOLD", 0.0f);
+        double numCollected = sharedPref.getFloat("USER_NUM_COLLECTED", 0.0f);
+        double numDeposited = sharedPref.getFloat("USER_NUM_DEPOSITED", 0.0f);
         try {
             Date dateLastUpdated = DateFormat.getInstance().parse(sharedPref.getString("USER_DATE_LAST_UPDATED", ""));
-            return new UserCoinzData(numGOLD, dateLastUpdated);
+            return new UserCoinzData(numGOLD, dateLastUpdated, numCollected, numDeposited);
         } catch (ParseException e) {
             Log.e("LocalStorageAPI", "[readUserCoinzData] Unable to parse date");
-            return new UserCoinzData(numGOLD, new Date());
+            return null;
         }
     }
 

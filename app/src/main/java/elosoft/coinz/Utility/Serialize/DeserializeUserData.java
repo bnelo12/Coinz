@@ -6,7 +6,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.HashMap;
 
-import elosoft.coinz.Models.ExchangeRate;
 import elosoft.coinz.Models.UserCoinzData;
 
 public class DeserializeUserData {
@@ -15,11 +14,13 @@ public class DeserializeUserData {
         try {
             return new UserCoinzData(
                     (double) userDataSerial.get("num_GOLD"),
-                    DateFormat.getInstance().parse((String)userDataSerial.get("dateLastUpdated"))
+                    DateFormat.getInstance().parse((String)userDataSerial.get("dateLastUpdated")),
+                    (double)userDataSerial.get("num_Collected"),
+                    (double)userDataSerial.get("num_Deposited")
             );
         } catch (ParseException e) {
             Log.e("DeserializeUserData", "[deserializeUserDataFromFireStore] Unable to parse date");
-            return new UserCoinzData((double) userDataSerial.get("num_GOLD"), null);
+            return null;
         }
     }
 }

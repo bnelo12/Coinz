@@ -82,5 +82,6 @@ public class TradesViewAdapterPending extends TradesViewAdapter {
         FireStoreAPI.getInstance().removePendingTrade(trade);
         FireStoreAPI.getInstance().removeSentTrade(trade);
         FireStoreAPI.getInstance().addUserCollectedCoinz(trade.getUser(), trade.getUserTradeCoinz().values());
+        FireStoreAPI.getInstance().addUserCollectedCoinz(trade.getPartner(), trade.getPartnerTradeCoinz().values());
     }
 }

@@ -74,10 +74,10 @@ public class CoinzNavigationActivity extends FragmentActivity {
                 Log.d("Fragment Manager", "Map not added. Creating new instance");
                 ft.add(R.id.current_page, mapScreenView);
             }
-            Log.d("Fragment Manager", "Showing map.");
+            Log.d("Fragment Manager", "Showing view_map.");
             ft.show(mapScreenView);
         } else {
-            Log.d("Fragment Manager", "Sub view selected is not map.");
+            Log.d("Fragment Manager", "Sub view selected is not view_map.");
             Log.d("Fragment Manager", "Removeing current fragment.");
 
             if (currentFragmentType != SubViewType.MAP) ft.remove(currentFragment);
